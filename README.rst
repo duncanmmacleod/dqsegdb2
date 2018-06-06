@@ -8,7 +8,7 @@ client available from https://github.com/ligovirgo/dqsegdb/.
 Basic Usage
 -----------
 
-```python
->>> from dqsegdb2.query import query_segments
->>> print(query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000))
-```
+::
+
+   >>> from dqsegdb2.query import query_segments
+   >>> print(query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000))
