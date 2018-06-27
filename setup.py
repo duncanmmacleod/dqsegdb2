@@ -36,7 +36,7 @@ def parse_version(path):
 
 
 # read description
-with open('README.rst', 'rb') as f:
+with open('README.md', 'rb') as f:
     longdesc = f.read().decode().strip()
 
 setup(
@@ -46,6 +46,7 @@ setup(
     author_email='duncan.macleod@ligo.org',
     description='Simplified python interface to DQSEGDB',
     long_description=longdesc,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     setup_requires=['setuptools'],
     install_requires=['six', 'pyOpenSSL'],
