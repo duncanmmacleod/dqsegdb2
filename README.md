@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/duncanmmacleod/dqsegdb2.svg?branch=master)](https://travis-ci.com/duncanmmacleod/dqsegdb2)
+
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
 LIGO-T1300625.
 
