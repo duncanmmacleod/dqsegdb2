@@ -1,0 +1,18 @@
+language: python
+sudo: false
+dist: trusty
+python:
+  - '2.6'
+  - '2.7'
+  - '3.3'
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - 'nightly'
+before_install:
+  - python -m pip install --upgrade pip setuptools
+install:
+  - python -m pip install .
+script:
+  - python -c "from dqsegdb2 import query"
+cache: pip
