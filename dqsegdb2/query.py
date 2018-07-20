@@ -72,8 +72,8 @@ def query_versions(flag, host=DEFAULT_SEGMENT_SERVER):
 
     Examples
     --------
-    >>> from dqsegdb2.query import query_names
-    >>> query_names('G1:GEO-SCIENCE')
+    >>> from dqsegdb2.query import query_versions
+    >>> query_versions('G1:GEO-SCIENCE')
     [1, 2, 3]
     """
     ifo, name = flag.split(':', 1)
