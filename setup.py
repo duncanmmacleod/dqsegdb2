@@ -49,7 +49,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages(),
     setup_requires=['setuptools'],
-    install_requires=['gwdatafind'],
+    install_requires=['ligo-segments', 'gwdatafind'],
     license='GPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
