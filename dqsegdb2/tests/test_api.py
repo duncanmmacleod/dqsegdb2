@@ -24,7 +24,7 @@ def test_segment_query_url():
     assert api.segment_query_url('http://test.com', 'X1', 'FLAG', 1,
                                  start=100, end=200) == (
         'http://test.com/dq/X1/FLAG/1?'
-        's=100&e=200&include=metadata,known,active'
+        'e=200&include=metadata,known,active&s=100'
     )
 
 

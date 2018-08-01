@@ -22,7 +22,7 @@ def _query(**kwargs):
     """Return a URL query string based on some key, value pairs
     """
     return '&'.join('{0}={1}'.format(key, value) for
-                    key, value in kwargs.items())
+                    key, value in sorted(kwargs.items()))
 
 
 def segment_query_url(host, ifo, name, version, start=None, end=None,
