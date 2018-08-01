@@ -66,6 +66,7 @@ setup(
     version=parse_version(os.path.join('dqsegdb2', '__init__.py')),
     author='Duncan Macleod',
     author_email='duncan.macleod@ligo.org',
+    url='https://github.com/duncanmmacleod/dqsegdb2',
     description='Simplified python interface to DQSEGDB',
     long_description=longdesc,
     long_description_content_type='text/markdown',
