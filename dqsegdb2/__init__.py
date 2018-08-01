@@ -17,6 +17,6 @@
 """A simplified Python implementation of the DQSEGDB API.
 """
 
-__version__ = '0.1.0'
+__version__ = '1.0.0'
 __author__ = 'Duncan Macleod <duncan.macleod@ligo.org>'
 __credits__ = 'Ryan Fisher, Gary Hemming'
