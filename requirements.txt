@@ -1,1 +1,1 @@
-git+https://git.ligo.org/lscsoft/gwdatafind.git
+gwdatafind
