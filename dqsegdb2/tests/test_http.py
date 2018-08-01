@@ -48,5 +48,5 @@ def test_request_https(urlopen, find, create):
 def test_request_json(urlopen):
     data = {'key': 'value'}
     urlopen.return_value = BytesIO(json.dumps(data).encode('utf-8'))
-    out = http.request_json('https://test')
+    out = http.request_json('http://test')
     assert out == data
