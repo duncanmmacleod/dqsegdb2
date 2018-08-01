@@ -8,9 +8,15 @@ python:
   - '3.6'
   - 'nightly'
 before_install:
-  - python -m pip install --upgrade pip setuptools
+  - |
+    python -m pip install \
+        pip setuptools \
+        pytest-cov "mock ; python_version < '3'"
 install:
   - python -m pip install .
 script:
-  - python -c "from dqsegdb2 import query"
+  - python -m pytest --pyargs dqsegdb2 --cov dqsegdb2
+after_success:
+  - python -m pip install coveralls
+  - coveralls
 cache: pip
