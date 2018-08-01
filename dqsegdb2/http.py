@@ -25,8 +25,6 @@ except ImportError:  # python < 3
     from urllib2 import urlopen
     from urlparse import urlparse
 
-from gwdatafind.utils import find_credential
-
 
 def request(url, **urlopen_kw):
     """Request data from a URL
@@ -50,6 +48,7 @@ def request(url, **urlopen_kw):
     """
     if urlparse(url).scheme == 'https' and 'context' not in urlopen_kw:
         from ssl import create_default_context
+        from gwdatafind.utils import find_credential
         urlopen_kw['context'] = context = create_default_context()
         context.load_cert_chain(*find_credential())
     return urlopen(url, **urlopen_kw)
