@@ -91,8 +91,6 @@ setup(
         'Topic :: Scientific/Engineering :: Astronomy',
         'Topic :: Scientific/Engineering :: Physics',
         'Operating System :: Unix',
-        'Operating System :: MacOS',
-        'Operating System :: Windows',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     ],
 )
