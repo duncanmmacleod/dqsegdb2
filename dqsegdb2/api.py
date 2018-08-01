@@ -28,6 +28,41 @@ def _query(**kwargs):
 def segment_query_url(host, ifo, name, version, start=None, end=None,
                       include='metadata,known,active'):
     """Returns the URL to use in querying for segments
+
+    Parameters
+    ----------
+    host : `str`
+        the URL of the target DQSEGDB2 host
+
+    ifo : `str`
+        the interferometer prefix
+
+    name : `str`
+        the name of the flag
+
+    version : `int`
+        the version of the flag
+
+    start : `int`
+        the start GPS time of the query
+
+    end : `int`
+        the end GPS time of the query
+
+    include : `str`, optional
+        the data to return, should be a comma-separated list of keys
+
+    Returns
+    -------
+    url : `str`
+        the full REST URL to query for information
+
+    Examples
+    --------
+    >>> from dqsegdb2.api import segment_query_url
+    >>> print(segment_query_url('https://segments.ligo.org', 'G1',
+    ...                         'GEO-SCIENCE', 1, 1000000000, 11000000000))
+    'https://segments.ligo.org/dq/G1/GEO-SCIENCE/1?s=1000000000&e=11000000000&include=metadata,known,active'
     """
     return '{host}/dq/{ifo}/{name}/{version}?{query}'.format(
         host=host, ifo=ifo, name=name, version=version,
@@ -36,11 +71,53 @@ def segment_query_url(host, ifo, name, version, start=None, end=None,
 
 def version_query_url(host, ifo, name):
     """Returns the URL to use in querying for flag versions
+
+    Parameters
+    ----------
+    host : `str`
+        the URL of the target DQSEGDB2 host
+
+    ifo : `str`
+        the interferometer prefix
+
+    name : `str`
+        the name of the flag
+
+    Returns
+    -------
+    url : `str`
+        the full REST URL to query for information
+
+    Examples
+    --------
+    >>> from dqsegdb2.api import version_query_url
+    >>> print(version_query_url('https://segments.ligo.org', 'G1',
+    ...                         'GEO-SCIENCE'))
+    'https://segments.ligo.org/dq/G1/GEO-SCIENCE'
     """
     return '{host}/dq/{ifo}/{name}'.format(host=host, ifo=ifo, name=name)
 
 
 def name_query_url(host, ifo):
     """Returns the URL to use in querying for flag names
+
+    Parameters
+    ----------
+    host : `str`
+        the URL of the target DQSEGDB2 host
+
+    ifo : `str`
+        the interferometer prefix
+
+    Returns
+    -------
+    url : `str`
+        the full REST URL to query for information
+
+    Examples
+    --------
+    >>> from dqsegdb2.api import name_query_url
+    >>> print(name_query_url('https://segments.ligo.org', 'G1'))
+    'https://segments.ligo.org/dq/G1'
     """
     return '{host}/dq/{ifo}'.format(host=host, ifo=ifo)

@@ -16,6 +16,7 @@ install:
   - python -m pip install .
 script:
   - python -m pytest --pyargs dqsegdb2 --cov dqsegdb2
+  - python setup.py build_sphinx -W
 after_success:
   - python -m pip install coveralls
   - coveralls

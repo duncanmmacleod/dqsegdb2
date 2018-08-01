@@ -19,8 +19,11 @@
 
 import os
 import re
+import sys
 
 from setuptools import (setup, find_packages)
+
+cmdclass = {}
 
 
 def parse_version(path):
@@ -35,6 +38,25 @@ def parse_version(path):
     raise RuntimeError("Unable to find version string.")
 
 
+# declare dependencies
+setup_requires = ['setuptools']
+install_requires = ['ligo-segments', 'gwdatafind'],
+tests_require = ['pytest']
+if {'pytest', 'test'}.intersection(sys.argv):
+    setup_requires.append('pytest_runner')
+
+# add sphinx integration
+if {'build_sphinx'}.intersection(sys.argv):
+    setup_requires.extend((
+        'sphinx',
+        'sphinx_rtd_theme',
+        'sphinx_automodapi',
+        'sphinx_tabs',
+        'numpydoc',
+    ))
+    from sphinx.setup_command import BuildDoc
+    cmdclass['build_sphinx'] = BuildDoc
+
 # read description
 with open('README.md', 'rb') as f:
     longdesc = f.read().decode().strip()
@@ -48,8 +70,9 @@ setup(
     long_description=longdesc,
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    setup_requires=['setuptools'],
-    install_requires=['ligo-segments', 'gwdatafind'],
+    setup_requires=setup_requires,
+    install_requires=install_requires,
+    tests_require=tests_require,
     license='GPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
