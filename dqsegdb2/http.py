@@ -17,124 +17,63 @@
 """HTTP interactions with DQSEGDB
 """
 
-import calendar
 import json
-import os
-import time
+try:
+    from urllib.request import urlopen
+    from urllib.parse import urlparse
+except ImportError:  # python < 3
+    from urllib2 import urlopen
+    from urlparse import urlparse
 
-from six.moves.http_client import HTTPSConnection
-from six.moves.urllib import request as urllib_request
-from six.moves.urllib.parse import urlparse
-
-from OpenSSL import crypto
-
-
-class HTTPSAuthConnection(HTTPSConnection):
-    def __init__(self, host, key_file=None, cert_file=None, **kwargs):
-        if cert_file is None or key_file is None:
-            cert, key = find_x509_credential()
-            cert_file = cert_file or cert
-            key_file = key_file or key
-        HTTPSConnection.__init__(
-            self, host, key_file=key_file, cert_file=cert_file, **kwargs)
+from gwdatafind.utils import find_credential
 
 
-class HTTPSAuthHandler(urllib_request.HTTPSHandler):
-    def https_open(self, req):
-        return self.do_open(HTTPSAuthConnection, req)
+def request(url, **urlopen_kw):
+    """Request data from a URL
 
-
-def find_x509_credential():
-    """Locate an X509 credential in the current environment
-    """
-    try:  # use X509_USER_PROXY from environment if set
-        path = os.environ['X509_USER_PROXY']
-    except KeyError:
-        pass
-    else:
-        validate_x509_proxy(path)
-        return path, path
-
-    try:  # use X509_USER_CERT and X509_USER_KEY if set
-        return os.environ['X509_USER_CERT'], os.environ['X509_USER_KEY']
-    except KeyError:
-        pass
-
-    # search for proxy file on disk
-    uid = os.getuid()
-    path = "/tmp/x509up_u%d" % uid
-    if os.access(path, os.R_OK):
-        validate_x509_proxy(path)
-        return path, path
-
-    raise RuntimeError("Could not find a valid proxy credential")
-
-
-def validate_x509_proxy(path):
-    """Validate a proxy certificate as RFC3820 and not expired
+    If the URL uses HTTPS and the `context` keyword
+    is not given, X509 credentials will be automatically loaded
+    using :func:`gwdatafind.utils.find_credential`.
 
     Parameters
     ----------
-    path : `str`
-        the path of the proxy certificate file
+    url : `str`
+        the remote URL to request (HTTP or HTTPS)
+
+    **urlopen_kw
+        other keywords are passed to :func:`urllib.request.urlopen`
 
     Returns
     -------
-    True
-        if the proxy is validated
-
-    Raises
-    ------
-    IOError
-        if the proxy certificate file cannot be read
-    RuntimeError
-        if the proxy is found to be a legacy globus cert, or has expired
+    reponse : `http.client.HTTPResponse`
+        the reponse from the URL
     """
-    # load the proxy from path
-    try:
-        with open(path, 'rt') as f:
-            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
-    except IOError as e:
-        e.args = ('Failed to load proxy certificate: %s' % str(e),)
-        raise
-
-    # try and read proxyCertInfo
-    rfc3820 = False
-    for i in range(cert.get_extension_count()):
-        if cert.get_extension(i).get_short_name() == 'proxyCertInfo':
-            rfc3820 = True
-            break
-
-    # otherwise test common name
-    if not rfc3820:
-        subject = cert.get_subject()
-        if subject.CN.startswith('proxy'):
-            raise RuntimeError('Could not find a valid proxy credential')
-
-    # check time remaining
-    expiry = cert.get_notAfter()
-    if isinstance(expiry, bytes):
-        expiry = expiry.decode('utf-8')
-    expiryu = calendar.timegm(time.strptime(expiry, "%Y%m%d%H%M%SZ"))
-    if expiryu < time.time():
-        raise RuntimeError('Required proxy credential has expired')
+    if urlparse(url).scheme == 'https' and 'context' not in urlopen_kw:
+        from ssl import create_default_context
+        urlopen_kw['context'] = context = create_default_context()
+        context.load_cert_chain(*find_credential())
+    return urlopen(url, **urlopen_kw)
 
 
-def request(url):
-    """Request data from a URL
+def request_json(url, **kwargs):
+    """Request data from a URL and return a parsed JSON packet
+
+    Parameters
+    ----------
+    url : `str`
+        the remote URL to request (HTTP or HTTPS)
+
+    Returns
+    -------
+    data : `object`
+        the URL reponse parsed with :func:`json.loads`
+
+    See also
+    --------
+    dqsegdb2.http.request
+        for information on how the request is performed
     """
-    purl = urlparse(url)
-    if purl.scheme == 'https':
-        opener = urllib_request.build_opener(HTTPSAuthHandler)
-        req = urllib_request.Request(url)
-        response = opener.open(req)
-    else:
-        response = urllib_request.urlopen(url)
-    out = response.read()
+    out = request(url, **kwargs).read()
     if isinstance(out, bytes):
-        return out.decode('utf8')
-    return out
-
-
-def request_json(url):
-    return json.loads(request(url))
+        out = out.decode('utf8')
+    return json.loads(out)
