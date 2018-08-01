@@ -30,7 +30,7 @@ DEFAULT_SEGMENT_SERVER = os.environ.setdefault(
     'DEFAULT_SEGMENT_SERVER', 'https://segments.ligo.org')
 
 
-def query_names(ifo, host=DEFAULT_SEGMENT_SERVER, versioned=False):
+def query_names(ifo, host=DEFAULT_SEGMENT_SERVER):
     """Query for all defined flags for the given ``ifo``
 
     Parameters
@@ -157,8 +157,8 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
                 map(segments.segment, result.pop(key)))
             if coalesce:
                 out[key].coalesce()
+        out.update(result)
         if i:  # multiple versions:
             out['version'] = None
-        out.update(result)
 
     return out
