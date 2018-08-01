@@ -12,9 +12,16 @@ DQSEGDB2
 `dqsegdb2` is a simplified Python implementation of the DQSEGDB API as
 defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
 
-This package only provides a query interface for GET requests,
-any users wishing to make POST requests should refer to the official
-dqsegdb Python client available from https://pypi.org/project/dqsegdb/.
+.. note::
+
+    This package does not provide a complete implementation of the API
+    as defined in LIGO-T1300625, and only supports ``GET`` requests for
+    a subset of information available from a DQSEGDB server.
+    Any users wishing to make ``POST`` requests should refer to the official
+    DQSEGDB Python client available from https://pypi.org/project/dqsegdb/.
+
+    However, `dqsegdb2` is light,  with minimal dependencies, so might be
+    useful for people only interested in querying for segment information.
 
 ============
 Installation
