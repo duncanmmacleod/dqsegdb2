@@ -2,7 +2,7 @@ version: 2
 
 run-tests: &run-tests
   name: Test
-  command: python -m pytest --cov dqsegdb2 --pyargs dqsegdb2
+  command: python -m pytest --pyargs dqsegdb2
 
 debian-build: &debian-build
   steps:
@@ -35,7 +35,7 @@ centos-build: &centos-build
         command: |
           set -x;
           yum -y -q update;
-          yum -y -q install rpm-build yum-utils;
+          yum -y -q install rpm-build yum-utils python${PY3XY} python3-rpm-macros;
           SRPM=$(rpmbuild --define "_topdir $(pwd)" -ts ./dqsegdb2-*.tar.* | cut -d\  -f2);
           yum-builddep -y -q ${SRPM};
           rpmbuild --define "_rpmdir $(pwd)" --rebuild ${SRPM};
@@ -78,6 +78,7 @@ jobs:
     docker:
       - image: ligo/base:el7
     environment:
+      PY3XY: "34"
       PYTHON_VERSION: "2.7"
 
 workflows:
