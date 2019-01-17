@@ -4,6 +4,7 @@
 
 # build files/directories to ignore
 /build/
+/dist/
 /.cache/
 /*.egg-info/
 /.eggs/

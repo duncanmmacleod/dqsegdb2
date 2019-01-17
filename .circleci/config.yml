@@ -1,0 +1,96 @@
+version: 2
+
+run-tests: &run-tests
+  name: Test
+  command: python -m pytest --cov dqsegdb2 --pyargs dqsegdb2
+
+debian-build: &debian-build
+  steps:
+    - checkout
+    - attach_workspace:
+        at: .
+    - run:
+        name: Build
+        command: |
+          set -x;
+          apt-get -yqq update;
+          apt-get -yqq install dpkg-dev devscripts;
+          pushd $(mktemp -d -p .);
+          tar -xf ../dqsegdb2-*.tar.* --strip-components=1;
+          mk-build-deps --tool "apt-get -y" --install --remove;
+          dpkg-buildpackage -us -uc -b;
+          popd;
+          dpkg --install python*dqsegdb2*.deb;
+    - run: *run-tests
+    - store_artifacts:
+        path: "*.deb"
+
+centos-build: &centos-build
+  steps:
+    - checkout
+    - attach_workspace:
+        at: .
+    - run:
+        name: Build
+        command: |
+          set -x;
+          yum -y -q update;
+          yum -y -q install rpm-build yum-utils;
+          SRPM=$(rpmbuild --define "_topdir $(pwd)" -ts ./dqsegdb2-*.tar.* | cut -d\  -f2);
+          yum-builddep -y -q ${SRPM};
+          rpmbuild --define "_rpmdir $(pwd)" --rebuild ${SRPM};
+          mv noarch/*.rpm .;
+          yum -y -q --nogpgcheck localinstall ./python*dqsegdb2*.rpm;
+    - run: *run-tests
+    - store_artifacts:
+        path: "*.rpm"
+
+jobs:
+  sdist:
+    docker:
+      - image: python
+    steps:
+      - checkout
+      - run:
+          name: Build tarball
+          command: python setup.py --quiet sdist --dist-dir .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dqsegdb2-*.tar.*
+
+  debian:stretch:2.7:
+    <<: *debian-build
+    docker:
+      - image: ligo/base:stretch
+    environment:
+      PYTHON_VERSION: "2.7"
+
+  debian:stretch:3.5:
+    <<: *debian-build
+    docker:
+      - image: ligo/base:stretch
+    environment:
+      PYTHON_VERSION: "3.5"
+
+  el7:2.7:
+    <<: *centos-build
+    docker:
+      - image: ligo/base:el7
+    environment:
+      PYTHON_VERSION: "2.7"
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - sdist
+      - debian:stretch:2.7:
+          requires:
+            - sdist
+      - debian:stretch:3.5:
+          requires:
+            - sdist
+      - el7:2.7:
+          requires:
+            - sdist
