@@ -1,5 +1,5 @@
 %define name    dqsegdb2
-%define version 1.0.0
+%define version 1.0.1
 %define release 1
 
 Name:      %{name}
@@ -102,5 +102,5 @@ rm -rf $RPM_BUILD_ROOT
 # -- changelog
 
 %changelog
-* Wed Aug 01 2018 Duncan Macleod <duncan.macleod@ligo.org>
-- 1.0.0 first release
+* Thu Feb 07 2019 Duncan Macleod <duncan.macleod@ligo.org> - 1.0.1-1
+- first release
