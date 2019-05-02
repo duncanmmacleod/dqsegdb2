@@ -4,14 +4,15 @@
 DQSEGDB2
 ########
 
-.. image:: https://travis-ci.com/duncanmmacleod/dqsegdb2.svg?branch=master
-   :target: https://travis-ci.com/duncanmmacleod/dqsegdb2
-.. image:: https://coveralls.io/repos/github/duncanmmacleod/dqsegdb2/badge.svg
-   :target: https://coveralls.io/github/duncanmmacleod/dqsegdb2
+.. image:: https://badge.fury.io/py/dqsegdb2.svg
+   :target: https://badge.fury.io/py/dqsegdb2
+   :alt: dqsegdb2 PyPI release badge
 .. image:: https://img.shields.io/pypi/l/dqsegdb2.svg
    :target: https://choosealicense.com/licenses/gpl-3.0/
+   :alt: dqsegdb2 license
 .. image:: https://zenodo.org/badge/136390328.svg
    :target: https://zenodo.org/badge/latestdoi/136390328
+   :alt: dqsegdb2 DOI
 
 `dqsegdb2` is a simplified Python implementation of the DQSEGDB API as
 defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.

@@ -41,21 +41,31 @@ def parse_version(path):
 # declare dependencies
 setup_requires = ['setuptools']
 install_requires = ['ligo-segments', 'gwdatafind'],
-tests_require = ['pytest']
-if {'pytest', 'test'}.intersection(sys.argv):
-    setup_requires.append('pytest_runner')
-
-# add sphinx integration
-if {'build_sphinx'}.intersection(sys.argv):
-    setup_requires.extend((
+extras_require = {
+    'test': [
+        'pytest',
+        'pytest-cov',
+        'mock ; python_version < \'3\'',
+    ],
+    'docs': [
         'sphinx',
         'sphinx_rtd_theme',
         'sphinx_automodapi',
         'sphinx_tabs',
         'numpydoc',
-    ))
+    ]
+}
+
+# add sphinx integration
+if {'build_sphinx'}.intersection(sys.argv):
+    setup_requires.extend(extras_require['docs'])
     from sphinx.setup_command import BuildDoc
     cmdclass['build_sphinx'] = BuildDoc
+
+# if running in binary build modes, don't use extras,
+# they can break the build for crappy old setuptools versions
+if os.getenv('RPM_BUILD_ROOT') or os.getenv('PYBUILD_NAME'):
+    extras_require = {}
 
 # read description
 with open('README.md', 'rb') as f:
@@ -73,7 +83,7 @@ setup(
     packages=find_packages(),
     setup_requires=setup_requires,
     install_requires=install_requires,
-    tests_require=tests_require,
+    extras_require=extras_require,
     license='GPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
