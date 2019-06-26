@@ -28,6 +28,12 @@ import pytest
 
 from .. import query
 
+KNOWN = [(0, 10)]
+ACTIVE = [(1, 3), (3, 4), (6, 10)]
+QUERY_SEGMENT = (2, 8)
+KNOWN_COALESCED = [(2, 8)]
+ACTIVE_COALESCED = [(2, 4), (6, 8)]
+
 
 @mock.patch('dqsegdb2.query.request_json')
 def test_query_names(request_json):
@@ -43,24 +49,30 @@ def test_query_versions(request_json):
     assert query.query_versions('X1:test') == sorted(versions)
 
 
-@pytest.mark.parametrize('flag', ('X1:TEST:1', 'X1:TEST:*'))
-@mock.patch('dqsegdb2.query.query_versions')
-@mock.patch('dqsegdb2.http.request')
-def test_query_versions_versioned(request, versions, flag):
-    versions.return_value = [1, 2]
+@pytest.mark.parametrize('flag, coalesce, known, active', [
+    ("X1:TEST:1", False, KNOWN, ACTIVE),
+    ("X1:TEST:1", True, KNOWN_COALESCED, ACTIVE_COALESCED),
+    ("X1:TEST:*", False, KNOWN + KNOWN, ACTIVE + ACTIVE),
+    ("X1:TEST:*", True, KNOWN_COALESCED, ACTIVE_COALESCED),
+])
+@mock.patch('dqsegdb2.query.query_versions', return_value=(1, 2))
+@mock.patch('dqsegdb2.http.request', return_value=mock.MagicMock())
+def test_query_segments(request, versions, flag, coalesce, known, active):
     result = {
         'ifo': 'X1',
         'name': 'TEST',
         'version': 1,
-        'known': [(0, 5)],
-        'active': [(1, 2), (3, 4)],
+        'known': KNOWN,
+        'active': ACTIVE
     }
     # this mock is a bit more complicated because query_segments() pops
-    # keys out of the dict, so we need to mock further upstream
-    request.return_value = response = mock.MagicMock()
-    response.read.return_value = json.dumps(result)
+    # keys out of the dict, and we want to call request_json multiple
+    # times, so we need to mock further upstream
+    request.return_value.read.return_value = json.dumps(result)
 
-    out = query.query_segments(flag, 0, 5)
+    out = query.query_segments(flag, 2, 8, coalesce=coalesce)
     assert out.pop('version') is (None if flag.endswith('*') else 1)
+    assert out.pop('known') == known
+    assert out.pop('active') == active
     for key in set(result) & set(out):
         assert out[key] == result[key]
