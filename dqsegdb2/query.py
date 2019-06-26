@@ -103,8 +103,10 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
         the URL of the database, defaults to `DEFAULT_SEGMENT_SERVER`.
 
     coalesce : `bool`, optional
-        if `True` coalesce the segmentlists returned by the server,
-        otherwise return the 'raw' result, default: `True`.
+        if `True`, coalesce the segmentlists returned by the server,
+        and restrict them to lie fully within the ``[start, end)``
+        request segment, otherwise return the 'raw' result,
+        default: `True`.
 
     Returns
     -------
@@ -133,6 +135,10 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
     >>> from dqsegdb2.query import query_segments
     >>> query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000)
     """
+    request = segments.segmentlist([
+        segments.segment(float(start), float(end)),
+    ])
+
     try:
         ifo, name, version = flag.split(':', 2)
         versions = [int(version)]
@@ -145,7 +151,9 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
     out = dict(
         known=segments.segmentlist(),
         active=segments.segmentlist(),
-        ifo=ifo, name=name, version=versions[0],
+        ifo=ifo,
+        name=name,
+        version=versions[0],
     )
 
     for i, version in enumerate(sorted(versions)):
@@ -153,10 +161,11 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
                                     start=start, end=end)
         result = request_json(url)
         for key in ('active', 'known'):
-            out[key] += segments.segmentlist(
-                map(segments.segment, result.pop(key)))
+            out[key].extend(
+                segments.segmentlist(map(segments.segment, result.pop(key)))
+            )
             if coalesce:
-                out[key].coalesce()
+                out[key] = out[key].coalesce() & request
         out.update(result)
         if i:  # multiple versions:
             out['version'] = None
