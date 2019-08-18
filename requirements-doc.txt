@@ -1,5 +1,5 @@
 -r requirements.txt
-sphinx
+sphinx==2.2.0
 sphinx_rtd_theme
 sphinx_automodapi
 sphinx_tabs
