@@ -1,4 +1,4 @@
-ligo-segments
+ligo-segments==1.2.0
 gwdatafind
 pytest
 pytest-cov
