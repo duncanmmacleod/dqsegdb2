@@ -1,5 +1,5 @@
 ligo-segments
 gwdatafind
 pytest
-pytest-cov
+pytest-cov==2.7.1
 mock ; python_version < '3'
