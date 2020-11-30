@@ -72,6 +72,8 @@ def request(url, **urlopen_kw):
 
         if token_data:
           req.add_header("Authorization", "Bearer " + token_data.rstrip())
+    else:
+        req = Request(url)
 
     return urlopen(req, **urlopen_kw)
 
