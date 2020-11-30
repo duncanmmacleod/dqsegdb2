@@ -26,7 +26,7 @@ from .. import http
 
 @mock.patch('dqsegdb2.http.urlopen')
 def test_request_http(urlopen):
-    http.request('test', a=1, b=2)
+    http.request('http://test', a=1, b=2)
     urlopen.assert_called_once_with(mock.ANY, a=1, b=2)
 
 
