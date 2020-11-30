@@ -29,8 +29,8 @@ def request(url, **urlopen_kw):
     is not given, a SciToken will be looked for in the
     following search order:
 
-    1. The contents of the file `${_CONDOR_CREDS}/scitokens.use`
-    2. The contents of the file pointed to by the environment variable `${SCITOKENS_FILE}`
+    1. A file `${_CONDOR_CREDS}/scitokens.use`
+    2. A file set by environment variable `${SCITOKENS_FILE}`
     3. The contents of the environment variable `${SCITOKENS}`
 
     If not SciToken can be found, an X509 credentials will be automatically
