@@ -55,23 +55,25 @@ def request(url, **urlopen_kw):
         req = Request(url)
 
         if os.environ.get('_CONDOR_CREDS'):
-          scitokens_path = os.path.join(os.environ['_CONDOR_CREDS'],'scitokens.use')
+            scitokens_path = os.path.join(os.environ['_CONDOR_CREDS'],
+                                          'scitokens.use')
         elif os.environ.get('SCITOKENS_FILE'):
-          scitokens_path = 'scitokens.use'
+            scitokens_path = 'scitokens.use'
         else:
-          scitokens_path = ''
+            scitokens_path = ''
 
         if os.path.isfile(scitokens_path):
-          with open(scitokens_path) as f: token_data = f.read()
+            with open(scitokens_path) as f:
+                token_data = f.read()
         elif os.environ.get('SCITOKEN'):
-          token_data = os.environ['SCITOKEN']
+            token_data = os.environ['SCITOKEN']
         else:
-          token_data = None
-          from gwdatafind.utils import find_credential
-          context.load_cert_chain(*find_credential())
+            token_data = None
+            from gwdatafind.utils import find_credential
+            context.load_cert_chain(*find_credential())
 
         if token_data:
-          req.add_header("Authorization", "Bearer " + token_data.rstrip())
+            req.add_header("Authorization", "Bearer " + token_data.rstrip())
     else:
         req = Request(url)
 
