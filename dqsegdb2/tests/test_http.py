@@ -27,7 +27,7 @@ from .. import http
 @mock.patch('dqsegdb2.http.urlopen')
 def test_request_http(urlopen):
     http.request('test', a=1, b=2)
-    urlopen.assert_called_once_with('test', a=1, b=2)
+    urlopen.assert_called_once_with(mock.ANY, a=1, b=2)
 
 
 @mock.patch('ssl.create_default_context')
@@ -38,7 +38,7 @@ def test_request_https(urlopen, find, create):
     create.return_value = context = mock.MagicMock()
     http.request('https://test', a=1)
     find.assert_called_once_with()
-    urlopen.assert_called_once_with('https://test', context=context, a=1)
+    urlopen.assert_called_once_with(mock.ANY, context=context, a=1)
 
 
 @mock.patch('dqsegdb2.http.urlopen')
