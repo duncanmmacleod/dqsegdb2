@@ -84,7 +84,13 @@ jobs:
     displayName: "Create environment"
 
   - bash: |
-      tar -x -f Sources/dqsegdb2-*.tar.gz --strip-components 1 */requirements.txt
+      tar \
+          --get \
+          --verbose \
+          --file Sources/dqsegdb2-*.tar.gz \
+          --strip-components 1 \
+          --wildcards \
+          */requirements.txt
       conda install --quiet --yes --update-deps --name ci --file requirements.txt
     displayName: "Install requirements"
 
