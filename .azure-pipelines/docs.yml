@@ -4,15 +4,20 @@ jobs:
     vmImage: 'ubuntu-latest'
   variables:
     CONDA_PKGS_DIRS: $(Pipeline.Workspace)/.conda/pkgs
+    PYTHON_VERSION: '3.9'
   steps:
   - template: conda.yml
   - bash: |
       conda create --name docs --yes --quiet \
-          "python=3" \
+          "python=${PYTHON_VERSION}" \
           --file requirements.txt \
           --file requirements-docs.txt \
       ;
     displayName: "Create docs environment"
+  - bash: |
+      source activate docs
+      python -m pip install .
+    displayName: "Install DQSegDB2"
   - bash: |
       cd docs
       source activate docs
