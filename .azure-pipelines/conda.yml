@@ -1,7 +1,7 @@
 steps:
 - task: Cache@2
   inputs:
-    key: 'conda | "$(Agent.OS)" | "python${PYTHON_VERSION}" | "$(System.JobName)"'
+    key: 'conda | "$(Agent.OS)" | "python${PYTHON_VERSION}" | "$(System.JobDisplayName)"'
     path: $(CONDA_PKGS_DIRS)
     restoreKeys: |
       conda | "$(Agent.OS)" | "python${PYTHON_VERSION}"
