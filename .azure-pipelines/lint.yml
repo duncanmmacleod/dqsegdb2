@@ -6,10 +6,14 @@ jobs:
   - task: UsePythonVersion@0
   - script: python3 -m pip install --upgrade flake8 flake8-junit-report
     displayName: "Install flake8"
-  - script: python3 -m flake8 --output-file | tee flake8.out
+  - script: python3 -m flake8 --output-file flake8.out
     displayName: "Run linter"
+  - script: cat flake8.out
+    displayName: "Print lint results"
+    condition: succeededOrFailed()
   - script: python3 -m junit_conversor flake8.out flake8.xml
     displayName: "Convert flake8 output to JUnit"
+    condition: succeededOrFailed()
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
