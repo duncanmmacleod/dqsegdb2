@@ -8,7 +8,7 @@ jobs:
       python3 -m pip install \
           --upgrade \
           --upgrade-strategy eager \
-          requirements-docs.txt
+          --requirement requirements-docs.txt
     displayName: "Install build requirements"
   - script: |
       cd docs
