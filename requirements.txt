@@ -1,5 +1,4 @@
-ligo-segments
 gwdatafind
+ligo-segments
 pytest
 pytest-cov
-mock ; python_version < '3'
