@@ -1,5 +1,11 @@
 stages:
+- stage: Lint
+  dependsOn: []
+  jobs:
+  - template: .azure-pipelines/lint.yml
+
 - stage: Build
+  dependsOn: []
   jobs:
   - template: .azure-pipelines/build.yml
 
