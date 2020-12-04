@@ -14,7 +14,7 @@ DQSEGDB2
    :target: https://zenodo.org/badge/latestdoi/136390328
    :alt: dqsegdb2 DOI
 
-`dqsegdb2` is a simplified Python implementation of the DQSEGDB API as
+``dqsegdb2`` is a simplified Python implementation of the DQSEGDB API as
 defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
 
 .. note::
@@ -25,7 +25,7 @@ defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
     Any users wishing to make ``POST`` requests should refer to the official
     DQSEGDB Python client available from https://pypi.org/project/dqsegdb/.
 
-    However, `dqsegdb2` is light,  with minimal dependencies, so might be
+    However, ``dqsegdb2`` is light,  with minimal dependencies, so might be
     useful for people only interested in querying for segment information.
 
 ============
