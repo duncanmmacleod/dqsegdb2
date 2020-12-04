@@ -76,7 +76,7 @@ jobs:
     displayName: Configure Conda
 
   - bash: |
-      conda create --name ci --yes \
+      conda create --name ci --yes --quiet \
           "python=${PYTHON_VERSION}" \
           "pip" \
           "setuptools" \
