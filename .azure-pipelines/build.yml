@@ -8,7 +8,9 @@ jobs:
       python3 -m pip install --upgrade pip setuptools wheel
     displayName: "Install build requirements"
   - script: |
-      python3 setup.py sdist bdist_wheel --dist-dir $(Build.ArtifactStagingDirectory)
+      python3 setup.py \
+          sdist --dist-dir $(Build.ArtifactStagingDirectory) \
+          bdist_wheel --dist-dir $(Build.ArtifactStagingDirectory)
     displayName: "Build distributions"
   - task: PublishBuildArtifacts@1
     inputs:
