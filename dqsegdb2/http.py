@@ -26,12 +26,15 @@ from urllib.parse import urlparse
 def request(url, **urlopen_kw):
     """Request data from a URL
     If the URL uses HTTPS and the `context` keyword
-    is not given, a SciToken will be looked for in the
-    following search order:
+    is not given, a SciToken will be looked for a serialized
+    scitoken from the following places in the order:
 
-    1. A file `${_CONDOR_CREDS}/scitokens.use`
-    2. A file set by environment variable `${SCITOKENS_FILE}`
-    3. The contents of the environment variable `${SCITOKENS}`
+    1. A token string in the environment variable `${SCITOKEN}`
+    2. A token in the file set by the environment variable `${SCITOKENS_FILE}`
+    3. A valid token in the `${_CONDOR_CREDS}` directory
+
+    The token must be unexpired and the audience must match the hostname
+    of the target server.
 
     If not SciToken can be found, an X509 credentials will be automatically
     loaded using :func:`gwdatafind.utils.find_credential`.
@@ -53,27 +56,48 @@ def request(url, **urlopen_kw):
         from ssl import create_default_context
         urlopen_kw['context'] = context = create_default_context()
         req = Request(url)
+        aud = urlparse(url).hostname
+        token_data = None
 
+        # look for a condor-created scitoken for the target url
         if os.environ.get('_CONDOR_CREDS'):
-            scitokens_path = os.path.join(os.environ['_CONDOR_CREDS'],
-                                          'scitokens.use')
-        elif os.environ.get('SCITOKENS_FILE'):
-            scitokens_path = 'scitokens.use'
-        else:
-            scitokens_path = ''
+            for f in os.listdir(os.environ['_CONDOR_CREDS']):
+                if f.endswith(".use"):
+                    try:
+                        with open(os.path.join(
+                                  os.environ['_CONDOR_CREDS'],f)) as t:
+                            token_data = t.read().strip()
+                            scitokens.SciToken.deserialize(token_data,
+                                                           audience=aud)
+                            break
+                    except:
+                        token_data = None
 
-        if os.path.isfile(scitokens_path):
-            with open(scitokens_path) as f:
-                token_data = f.read()
-        elif os.environ.get('SCITOKEN'):
-            token_data = os.environ['SCITOKEN']
+        # use the token in the specified file
+        if os.environ.get('SCITOKENS_FILE'):
+            try:
+                with open(os.environ.get('SCITOKENS_FILE')) as t:
+                    token_data = t.read().strip()
+                    scitokens.SciToken.deserialize(token_data,
+                                                   audience=aud)
+            except:
+                token_data = None
+
+        # use a serialized token in an environment variable
+        if os.environ.get('SCITOKEN'):
+            token_data = os.environ['SCITOKEN'].strip()
+            try:
+                scitokens.SciToken.deserialize(token_data,
+                                               audience=aud)
+            except:
+                token_data = None
+
+        # if we have a token, use it, otherwise look for x590 cert
+        if token_data:
+            req.add_header("Authorization", "Bearer " + token_data)
         else:
-            token_data = None
             from gwdatafind.utils import find_credential
             context.load_cert_chain(*find_credential())
-
-        if token_data:
-            req.add_header("Authorization", "Bearer " + token_data.rstrip())
     else:
         req = Request(url)
 

@@ -35,7 +35,6 @@ def parse_version(path):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
-
 setup(
     version=parse_version(os.path.join("dqsegdb2", "__init__.py")),
 )
