@@ -2,31 +2,31 @@ jobs:
 - job: Test
   strategy:
     matrix:
-      linux_python3.6:
+      'Linux Python 3.6':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.6'
-      linux_python3.7:
+      'Linux Python 3.7':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.7'
-      linux_python3.8:
+      'Linux Python 3.8':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.8'
-      macos_python3.6:
+      'macOS Python 3.6':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.6'
-      macos_python3.7:
+      'macOS Python 3.7':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.7'
-      macos_python3.8:
+      'macOS Python 3.8':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.8'
-      win_python3.6:
+      'Windows Python 3.6':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.6'
-      win_python3.7:
+      'Windows Python 3.7':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.7'
-      win_python3.8:
+      'Windows Python 3.8':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.8'
 
@@ -45,47 +45,26 @@ jobs:
       downloadPath: '.'
     displayName: Download sources
 
-  - task: Cache@2
-    inputs:
-      key: 'conda | "$(Agent.OS)" | "python${PYTHON_VERSION}"'
-      path: $(CONDA_PKGS_DIRS)
-      restoreKeys: |
-        conda | "$(Agent.OS)"
-    displayName: Cache Conda packages
-
-  - bash: echo "##vso[task.prependpath]$CONDA/bin"
-    displayName: Add conda to PATH (Linux)
-    condition: eq( variables['Agent.OS'], 'Linux' )
+  # install and configure conda
+  - template: conda.yml
 
   - bash: |
-      echo "##vso[task.prependpath]$CONDA/bin"
-      sudo chown -R $USER $CONDA
-    displayName: Add conda to PATH (macOS)
-    condition: eq( variables['Agent.OS'], 'Darwin' )
-
-  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
-    displayName: Add conda to PATH (Windows)
-    condition: eq( variables['Agent.OS'], 'Windows_NT' )
-
-  - bash: |
-      conda config --set always_yes yes
-      conda config --add channels conda-forge
-      conda info --all
-      conda config --show-sources
-      conda list --show-channel-urls
-    displayName: Configure Conda
-
-  - bash: |
-      conda create --name ci --yes \
+      conda create --name ci --yes --quiet \
           "python=${PYTHON_VERSION}" \
           "pip" \
           "setuptools" \
       ;
     displayName: "Create environment"
 
-  - bash: |
-      tar -x -f Sources/dqsegdb2-*.tar.gz --strip-components 1 */requirements.txt
-      conda install --quiet --yes --update-deps --name ci --file requirements.txt
+  - bash: tar -xvf Sources/dqsegdb2-*.tar.gz --strip-components 1 */requirements.txt
+    displayName: "Extract requirements (macOS)"
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+
+  - bash: tar -xvf Sources/dqsegdb2-*.tar.gz --strip-components 1 --wildcards */requirements.txt
+    displayName: "Extract requirements (not-macOS)"
+    condition: ne( variables['Agent.OS'], 'Darwin' )
+
+  - bash: conda install --quiet --yes --update-deps --name ci --file requirements.txt
     displayName: "Install requirements"
 
   - bash: |
@@ -105,7 +84,7 @@ jobs:
     condition: succeededOrFailed()
     inputs:
       testResultsFiles: "junit.xml"
-      testRunTitle: "(Agent.OS) | Python $(PYTHON_VERSION)"
+      testResultsFormat: "JUnit"
 
   - task: PublishCodeCoverageResults@1
     inputs:
