@@ -1,5 +1,5 @@
 jobs:
-- job: Build
+- job: Lint
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -13,5 +13,6 @@ jobs:
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
+      testResultsFormat: "JUnit"
       testResultsFiles: "flake8.xml"
-      testRunTitle: "(Agent.OS) | Python $(PYTHON_VERSION)"
+      testRunTitle: "Flake 8"

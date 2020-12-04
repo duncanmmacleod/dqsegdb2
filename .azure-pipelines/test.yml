@@ -84,7 +84,7 @@ jobs:
     condition: succeededOrFailed()
     inputs:
       testResultsFiles: "junit.xml"
-      testRunTitle: "(Agent.OS) | Python $(PYTHON_VERSION)"
+      testRunTitle: "pytest | $(Agent.OS) | Python $(PYTHON_VERSION)"
 
   - task: PublishCodeCoverageResults@1
     inputs:
