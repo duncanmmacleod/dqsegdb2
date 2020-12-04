@@ -58,6 +58,7 @@ def request(url, **urlopen_kw):
         req = Request(url)
         aud = urlparse(url).hostname
         token_data = None
+        tok = None
 
         # look for a condor-created scitoken for the target url
         if os.environ.get('_CONDOR_CREDS'):
@@ -67,30 +68,32 @@ def request(url, **urlopen_kw):
                         with open(os.path.join(
                                   os.environ['_CONDOR_CREDS'],f)) as t:
                             token_data = t.read().strip()
-                            scitokens.SciToken.deserialize(token_data,
-                                                           audience=aud)
+                            tok = scitokens.SciToken.deserialize(token_data,
+                                                                 audience=aud)
                             break
-                    except:
-                        token_data = None
+                    except InvalidTokenFormat, InvalidAudienceError:
+                        # ignore files that do not contain tokens
+                        # or that are for a different audience
+                        pass
 
         # use the token in the specified file
         if os.environ.get('SCITOKENS_FILE'):
-            try:
-                with open(os.environ.get('SCITOKENS_FILE')) as t:
-                    token_data = t.read().strip()
-                    scitokens.SciToken.deserialize(token_data,
-                                                   audience=aud)
-            except:
-                token_data = None
+            with open(os.environ.get('SCITOKENS_FILE')) as t:
+                token_data = t.read().strip()
+                tok = scitokens.SciToken.deserialize(token_data,
+                                                     audience=aud)
 
         # use a serialized token in an environment variable
         if os.environ.get('SCITOKEN'):
             token_data = os.environ['SCITOKEN'].strip()
-            try:
-                scitokens.SciToken.deserialize(token_data,
-                                               audience=aud)
-            except:
-                token_data = None
+            tok = scitokens.SciToken.deserialize(token_data,
+                                                 audience=aud)
+
+        # check that this token has dqsegdb read permissions
+        if token_data:
+            token_enforcer = scitokens.Enforcer(tok['iss'], audience=aud)
+            if token_enforcer.test(token, "read", "/DQSegDB") is False:
+                raise ValueError('SciToken does not have read:/DQSegDB scope')
 
         # if we have a token, use it, otherwise look for x590 cert
         if token_data:
