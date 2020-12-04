@@ -2,31 +2,31 @@ jobs:
 - job: Test
   strategy:
     matrix:
-      linux_python3.6:
+      'Linux Python 3.6':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.6'
-      linux_python3.7:
+      'Linux Python 3.7':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.7'
-      linux_python3.8:
+      'Linux Python 3.8':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.8'
-      macos_python3.6:
+      'macOS Python 3.6':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.6'
-      macos_python3.7:
+      'macOS Python 3.7':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.7'
-      macos_python3.8:
+      'macOS Python 3.8':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.8'
-      win_python3.6:
+      'Windows Python 3.6':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.6'
-      win_python3.7:
+      'Windows Python 3.7':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.7'
-      win_python3.8:
+      'Windows Python 3.8':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.8'
 
