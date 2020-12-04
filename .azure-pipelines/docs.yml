@@ -2,17 +2,21 @@ jobs:
 - job: Docs
   pool:
     vmImage: 'ubuntu-latest'
+  variables:
+    CONDA_PKGS_DIRS: $(Pipeline.Workspace)/.conda/pkgs
   steps:
-  - task: UsePythonVersion@0
-  - script: |
-      python3 -m pip install \
-          --upgrade \
-          --upgrade-strategy eager \
-          --requirement requirements-docs.txt
-    displayName: "Install build requirements"
-  - script: |
+  - template: conda.yml
+  - bash: |
+      conda create --name docs --yes --quiet \
+          "python=3" \
+          --file requirements.txt \
+          --file requirements-docs.txt \
+      ;
+    displayName: "Create docs environment"
+  - bash: |
       cd docs
-      python3 -m sphinx -b html . $(Build.ArtifactStagingDirectory)
+      source activate docs
+      python -m sphinx -b html . $(Build.ArtifactStagingDirectory)
     displayName: "Build documentation"
   - task: PublishBuildArtifacts@1
     inputs:

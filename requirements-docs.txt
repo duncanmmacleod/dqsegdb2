@@ -1,6 +1,5 @@
--r requirements.txt
+numpydoc
 sphinx
 sphinx_rtd_theme
-sphinx_automodapi
-sphinx_tabs
-numpydoc
+sphinx-automodapi
+sphinx-tabs
