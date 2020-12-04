@@ -1,5 +1,5 @@
 stages:
-- stage: Build source
+- stage: Build
   jobs:
   - template: .azure-pipelines/build.yml
 
