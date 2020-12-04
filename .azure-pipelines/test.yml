@@ -85,7 +85,7 @@ jobs:
 
   - bash: |
       tar \
-          --get \
+          --extract \
           --verbose \
           --file Sources/dqsegdb2-*.tar.gz \
           --strip-components 1 \
