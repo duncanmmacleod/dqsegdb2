@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018  Duncan Macleod
+# Copyright (C) 2018,2020  Duncan Macleod
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,12 +19,8 @@
 """
 
 import json
-try:
-    from urllib.request import urlopen
-    from urllib.parse import urlparse
-except ImportError:  # python < 3
-    from urllib2 import urlopen
-    from urlparse import urlparse
+from urllib.request import urlopen
+from urllib.parse import urlparse
 
 
 def request(url, **urlopen_kw):

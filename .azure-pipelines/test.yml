@@ -11,6 +11,9 @@ jobs:
       'Linux Python 3.8':
         imageName: 'ubuntu-latest'
         PYTHON_VERSION: '3.8'
+      'Linux Python 3.9':
+        imageName: 'ubuntu-latest'
+        PYTHON_VERSION: '3.9'
       'macOS Python 3.6':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.6'
@@ -20,6 +23,9 @@ jobs:
       'macOS Python 3.8':
         imageName: 'macOS-latest'
         PYTHON_VERSION: '3.8'
+      'macOS Python 3.9':
+        imageName: 'macOS-latest'
+        PYTHON_VERSION: '3.9'
       'Windows Python 3.6':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.6'
@@ -29,6 +35,9 @@ jobs:
       'Windows Python 3.8':
         imageName: 'windows-latest'
         PYTHON_VERSION: '3.8'
+      'Windows Python 3.9':
+        imageName: 'windows-latest'
+        PYTHON_VERSION: '3.9'
 
   pool:
     vmImage: $(imageName)

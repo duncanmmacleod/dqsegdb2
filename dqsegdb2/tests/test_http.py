@@ -19,10 +19,7 @@
 
 import json
 from io import BytesIO
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 
 from .. import http
 

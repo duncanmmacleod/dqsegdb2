@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018  Duncan Macleod
+# Copyright (C) 2018,2020  Duncan Macleod
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +20,8 @@
 
 import os
 import re
-import sys
 
-from setuptools import (setup, find_packages)
-
-cmdclass = {}
+from setuptools import setup
 
 
 def parse_version(path):
@@ -38,70 +36,6 @@ def parse_version(path):
     raise RuntimeError("Unable to find version string.")
 
 
-# declare dependencies
-setup_requires = ['setuptools']
-install_requires = ['ligo-segments', 'gwdatafind'],
-extras_require = {
-    'test': [
-        'pytest',
-        'pytest-cov',
-        'mock ; python_version < \'3\'',
-    ],
-    'docs': [
-        'sphinx',
-        'sphinx_rtd_theme',
-        'sphinx_automodapi',
-        'sphinx_tabs',
-        'numpydoc',
-    ]
-}
-
-# add sphinx integration
-if {'build_sphinx'}.intersection(sys.argv):
-    setup_requires.extend(extras_require['docs'])
-    from sphinx.setup_command import BuildDoc
-    cmdclass['build_sphinx'] = BuildDoc
-
-# if running in binary build modes, don't use extras,
-# they can break the build for crappy old setuptools versions
-if os.getenv('RPM_BUILD_ROOT') or os.getenv('PYBUILD_NAME'):
-    extras_require = {}
-
-# read description
-with open('README.md', 'rb') as f:
-    longdesc = f.read().decode().strip()
-
 setup(
-    name='dqsegdb2',
-    version=parse_version(os.path.join('dqsegdb2', '__init__.py')),
-    author='Duncan Macleod',
-    author_email='duncan.macleod@ligo.org',
-    url='https://github.com/duncanmmacleod/dqsegdb2',
-    description='Simplified python interface to DQSEGDB',
-    long_description=longdesc,
-    long_description_content_type='text/markdown',
-    packages=find_packages(),
-    setup_requires=setup_requires,
-    install_requires=install_requires,
-    extras_require=extras_require,
-    license='GPLv3',
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Intended Audience :: Science/Research',
-        'Intended Audience :: End Users/Desktop',
-        'Intended Audience :: Developers',
-        'Natural Language :: English',
-        'Topic :: Scientific/Engineering',
-        'Topic :: Scientific/Engineering :: Astronomy',
-        'Topic :: Scientific/Engineering :: Physics',
-        'Operating System :: Unix',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-    ],
+    version=parse_version(os.path.join("dqsegdb2", "__init__.py")),
 )
