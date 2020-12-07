@@ -29,7 +29,7 @@ except ImportError:  # python < 3
 def request(url, **urlopen_kw):
     """Request data from a URL
 
-    If the URL uses HTTPS and the `context` keyword
+    If the URL uses HTTPS and the ``context`` keyword
     is not given, X509 credentials will be automatically loaded
     using :func:`gwdatafind.utils.find_credential`.
 

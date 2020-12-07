@@ -39,7 +39,7 @@ def query_names(ifo, host=DEFAULT_SEGMENT_SERVER):
         the interferometer prefix for which to query
 
     host : `str`, optional
-        the URL of the database, defaults to `DEFAULT_SEGMENT_SERVER`
+        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``
 
     Returns
     -------
@@ -65,7 +65,7 @@ def query_versions(flag, host=DEFAULT_SEGMENT_SERVER):
         the name for which to query
 
     host : `str`, optional
-        the URL of the database, defaults to `DEFAULT_SEGMENT_SERVER`
+        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``
 
     Returns
     -------
@@ -100,7 +100,7 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
         the GPS end time.
 
     host : `str`, optional
-        the URL of the database, defaults to `DEFAULT_SEGMENT_SERVER`.
+        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``.
 
     coalesce : `bool`, optional
         if `True`, coalesce the segmentlists returned by the server,

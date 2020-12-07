@@ -21,7 +21,7 @@ jobs:
   - bash: |
       cd docs
       source activate docs
-      python -m sphinx -b html . $(Build.ArtifactStagingDirectory)
+      python -m sphinx -b html -n -W . $(Build.ArtifactStagingDirectory)
     displayName: "Build documentation"
   - task: PublishBuildArtifacts@1
     inputs:
