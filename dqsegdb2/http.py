@@ -20,6 +20,8 @@
 
 import os
 import json
+import scitokens
+from scitokens.utils.errors import InvalidTokenFormat, InvalidAudienceError
 from urllib.request import urlopen
 from urllib.parse import urlparse
 
