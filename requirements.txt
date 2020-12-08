@@ -2,3 +2,4 @@ gwdatafind
 ligo-segments
 pytest
 pytest-cov
+scitokens
