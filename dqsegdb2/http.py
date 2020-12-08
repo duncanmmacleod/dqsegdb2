@@ -52,10 +52,10 @@ def request(url, **urlopen_kw):
     reponse : `http.client.HTTPResponse`
         the reponse from the URL
     """
+    req = Request(url)
     if urlparse(url).scheme == 'https' and 'context' not in urlopen_kw:
         from ssl import create_default_context
         urlopen_kw['context'] = context = create_default_context()
-        req = Request(url)
         aud = urlparse(url).hostname
         token_data = None
         tok = None
@@ -101,8 +101,6 @@ def request(url, **urlopen_kw):
         else:
             from gwdatafind.utils import find_credential
             context.load_cert_chain(*find_credential())
-    else:
-        req = Request(url)
 
     return urlopen(req, **urlopen_kw)
 
