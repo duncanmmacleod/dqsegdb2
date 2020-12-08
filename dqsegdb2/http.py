@@ -73,7 +73,7 @@ def request(url, **urlopen_kw):
                             tok = scitokens.SciToken.deserialize(token_data,
                                                                  audience=aud)
                             break
-                    except InvalidTokenFormat, InvalidAudienceError:
+                    except (InvalidTokenFormat, InvalidAudienceError):
                         # ignore files that do not contain tokens
                         # or that are for a different audience
                         pass
