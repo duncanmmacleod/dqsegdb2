@@ -6,7 +6,7 @@
 [![DOI](https://zenodo.org/badge/136390328.svg)](https://zenodo.org/badge/latestdoi/136390328)
 ![Supported Python versions](https://img.shields.io/pypi/pyversions/dqsegdb2.svg)
 
-[![Build status](https://github.com/duncanmmacleod/dqsegdb2/actions/workflows/build.yml/badge.svg?branch=master)]
+[![Build status](https://github.com/duncanmmacleod/dqsegdb2/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/duncanmmacleod/dqsegdb2/actions/workflows/build.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/da522356dd6a3d90eaac/maintainability)](https://codeclimate.com/github/duncanmmacleod/dqsegdb2/maintainability)
 [![Documentation status](https://readthedocs.org/projects/dqsegdb2/badge/?version=latest)](https://dqsegdb2.readthedocs.io/en/latest/?badge=latest)
 [![Coverage status](https://codecov.io/gh/duncanmmacleod/dqsegdb2/branch/master/graph/badge.svg)](https://codecov.io/gh/duncanmmacleod/dqsegdb2)
