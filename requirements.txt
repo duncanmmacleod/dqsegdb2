@@ -2,4 +2,4 @@ gwdatafind
 ligo-segments
 pytest
 pytest-cov
-scitokens
+scitokens>=1.4.0
