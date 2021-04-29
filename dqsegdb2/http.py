@@ -21,7 +21,9 @@
 import os
 import json
 import scitokens
-from scitokens.utils.errors import InvalidTokenFormat, InvalidAudienceError
+from scitokens.utils.errors import InvalidTokenFormat
+from jwt.exceptions import InvalidAudienceError
+from urllib.request import Request
 from urllib.request import urlopen
 from urllib.parse import urlparse
 
