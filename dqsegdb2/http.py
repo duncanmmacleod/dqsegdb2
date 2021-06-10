@@ -20,9 +20,6 @@
 
 import os
 import json
-import scitokens
-from scitokens.utils.errors import InvalidTokenFormat
-from jwt.exceptions import InvalidAudienceError
 from urllib.request import Request
 from urllib.request import urlopen
 from urllib.parse import urlparse
@@ -59,49 +56,15 @@ def request(url, **urlopen_kw):
     req = Request(url)
     if urlparse(url).scheme == 'https' and 'context' not in urlopen_kw:
         from ssl import create_default_context
+        from gwdatafind.utils import find_scitoken
         urlopen_kw['context'] = context = create_default_context()
+
         aud = urlparse(url).hostname
-        token_data = None
-        tok = None
-
-        # look for a condor-created scitoken for the target url
-        if os.environ.get('_CONDOR_CREDS'):
-            for f in os.listdir(os.environ['_CONDOR_CREDS']):
-                if f.endswith(".use"):
-                    try:
-                        with open(os.path.join(
-                                  os.environ['_CONDOR_CREDS'],f)) as t:
-                            token_data = t.read().strip()
-                            tok = scitokens.SciToken.deserialize(token_data,
-                                                                 audience=aud)
-                            break
-                    except (InvalidTokenFormat, InvalidAudienceError):
-                        # ignore files that do not contain tokens
-                        # or that are for a different audience
-                        pass
-
-        # use the token in the specified file
-        if os.environ.get('SCITOKENS_FILE'):
-            with open(os.environ.get('SCITOKENS_FILE')) as t:
-                token_data = t.read().strip()
-                tok = scitokens.SciToken.deserialize(token_data,
-                                                     audience=aud)
-
-        # use a serialized token in an environment variable
-        if os.environ.get('SCITOKEN'):
-            token_data = os.environ['SCITOKEN'].strip()
-            tok = scitokens.SciToken.deserialize(token_data,
-                                                 audience=aud)
-
-        # check that this token has dqsegdb read permissions
-        if token_data:
-            token_enforcer = scitokens.Enforcer(tok['iss'], audience=aud)
-            if token_enforcer.test(token, "read", "/DQSegDB") is False:
-                raise ValueError('SciToken does not have read:/DQSegDB scope')
+        token = find_scitoken(aud, 'read:/DQSegDB')
 
         # if we have a token, use it, otherwise look for x590 cert
-        if token_data:
-            req.add_header("Authorization", "Bearer " + token_data)
+        if token:
+            req.add_header("Authorization", "Bearer " + token._serialized_token)
         else:
             from gwdatafind.utils import find_credential
             context.load_cert_chain(*find_credential())

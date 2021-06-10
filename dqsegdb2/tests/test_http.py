@@ -31,13 +31,14 @@ def test_request_http(urlopen):
 
 
 @mock.patch('ssl.create_default_context')
+@mock.patch('gwdatafind.utils.find_scitoken')
 @mock.patch('gwdatafind.utils.find_credential')
 @mock.patch('dqsegdb2.http.urlopen')
-def test_request_https(urlopen, find, create):
-    print(create, find, urlopen)
+def test_request_https(urlopen, findc, finds, create):
     create.return_value = context = mock.MagicMock()
     http.request('https://test', a=1)
-    find.assert_called_once_with()
+    finds.assert_called_once_with(aud='test', scope='read:/DQSegDB')
+    findc.assert_called_once_with()
     urlopen.assert_called_once_with(mock.ANY, context=context, a=1)
 
 
