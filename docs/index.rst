@@ -43,7 +43,6 @@ Package documentation
 .. toctree::
 
    api
-   http
    query
 
 ==================

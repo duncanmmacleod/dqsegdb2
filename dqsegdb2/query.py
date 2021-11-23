@@ -22,14 +22,21 @@ import os
 
 from ligo import segments
 
+from igwn_auth_utils import requests as igwn_requests
+
 from . import api
-from .http import request_json
 
 DEFAULT_SEGMENT_SERVER = os.environ.setdefault(
     'DEFAULT_SEGMENT_SERVER', 'https://segments.ligo.org')
 
 
-def query_names(ifo, host=DEFAULT_SEGMENT_SERVER):
+def _get_json(*args, **kwargs):
+    response = igwn_requests.get(*args, **kwargs)
+    response.raise_for_status()
+    return response.json()
+
+
+def query_names(ifo, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
     """Query for all defined flags for the given ``ifo``
 
     Parameters
@@ -51,11 +58,11 @@ def query_names(ifo, host=DEFAULT_SEGMENT_SERVER):
     >>> query_names('G1')
     """
     url = api.name_query_url(host, ifo)
-    names = request_json(url)['results']
+    names = _get_json(url, **request_kwargs)['results']
     return {'{0}:{1}'.format(ifo, name) for name in names}
 
 
-def query_versions(flag, host=DEFAULT_SEGMENT_SERVER):
+def query_versions(flag, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
     """Query for defined versions for the given flag
 
     Parameters
@@ -79,11 +86,17 @@ def query_versions(flag, host=DEFAULT_SEGMENT_SERVER):
     """
     ifo, name = flag.split(':', 1)
     url = api.version_query_url(host, ifo, name)
-    return sorted(request_json(url)['version'])
+    return sorted(_get_json(url, **request_kwargs)['version'])
 
 
-def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
-                   coalesce=True):
+def query_segments(
+    flag,
+    start,
+    end,
+    host=DEFAULT_SEGMENT_SERVER,
+    coalesce=True,
+    **request_kwargs,
+):
     """Query for segments for the given flag in a ``[start, stop)`` interval
 
     Parameters
@@ -155,18 +168,20 @@ def query_segments(flag, start, end, host=DEFAULT_SEGMENT_SERVER,
         version=versions[0],
     )
 
-    for i, version in enumerate(sorted(versions)):
-        url = api.segment_query_url(host, ifo, name, version,
-                                    start=start, end=end)
-        result = request_json(url)
-        for key in ('active', 'known'):
-            out[key].extend(
-                segments.segmentlist(map(segments.segment, result.pop(key)))
-            )
-            if coalesce:
-                out[key] = out[key].coalesce() & request
-        out.update(result)
-        if i:  # multiple versions:
-            out['version'] = None
+    with igwn_requests.Session(**request_kwargs) as sess:
+        for i, version in enumerate(sorted(versions)):
+            url = api.segment_query_url(host, ifo, name, version,
+                                        start=start, end=end)
+            result = _get_json(url, session=sess)
+            for key in ('active', 'known'):
+                out[key].extend(segments.segmentlist(map(
+                    segments.segment,
+                    result.pop(key),
+                )))
+                if coalesce:
+                    out[key] = out[key].coalesce() & request
+            out.update(result)
+            if i:  # multiple versions:
+                out['version'] = None
 
     return out

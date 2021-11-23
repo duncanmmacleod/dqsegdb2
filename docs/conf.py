@@ -41,9 +41,12 @@ pygments_style = 'monokai'
 
 # Intersphinx directory
 intersphinx_mapping = {
-    'https://docs.python.org/': None,  # python
-    'https://lscsoft.docs.ligo.org/ligo-segments/': None,  # ligo-segments,
-    'https://gwdatafind.readthedocs.io/en/stable/': None,  # gwdatafind,
+    "python": ("https://docs.python.org/", None),
+    "ligo-segments": ("https://lscsoft.docs.ligo.org/ligo-segments/", None),
+    "igwn-auth-utils": (
+        "https://igwn-auth-utils.readthedocs.io/en/stable/",
+        None,
+    ),
 }
 
 # The reST default role (used for this markup: `text`) to use for all
