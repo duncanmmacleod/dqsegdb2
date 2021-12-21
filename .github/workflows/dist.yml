@@ -92,7 +92,7 @@ jobs:
       shell: bash
 
     - name: Install test requirements
-      run: python -m pip install pytest
+      run: python -m pip install pytest pytest-cov requests-mock
 
     - name: Run test suite
       run: |
