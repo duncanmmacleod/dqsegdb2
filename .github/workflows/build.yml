@@ -22,20 +22,21 @@ jobs:
     # run a full build-and-test from the git repo,
     # including all optional dependencies
     # -----------------------
-    name: Build and test
+    name: Python ${{ matrix.python-version }} (${{ matrix.os }})
 
     strategy:
+      fail-fast: false
       matrix:
         os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
+          - macOS
+          - Ubuntu
+          - Windows
         python-version:
           - 3.6
           - 3.7
           - 3.8
           - 3.9
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
 
     # this is needed for conda environments to activate automatically
     defaults:
