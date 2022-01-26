@@ -66,12 +66,9 @@ jobs:
       run: python -m coverage report
 
     - name: Publish coverage to Codecov
-      if: ${{ always() }}
-      uses: codecov/codecov-action@v1.2.1
+      uses: codecov/codecov-action@v2
       with:
-        fail_ci_if_error: true
-        files: coverage.xml
-        flags: ${{ matrix.os }},python${{ matrix.python-version }}
+        flags: ${{ runner.os }},python${{ matrix.python-version }}
 
     - name: Upload test results
       if: always()
