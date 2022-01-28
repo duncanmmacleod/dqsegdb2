@@ -89,3 +89,20 @@ jobs:
       with:
         name: pytest-${{ matrix.os }}-${{ matrix.python-version }}
         path: pytest.xml
+
+  publish-test-results:
+    name: Publish tests Results
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: artifacts/**/pytest.xml
