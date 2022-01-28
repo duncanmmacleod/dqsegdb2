@@ -41,9 +41,12 @@ pygments_style = 'monokai'
 
 # Intersphinx directory
 intersphinx_mapping = {
-    'https://docs.python.org/': None,  # python
-    'https://lscsoft.docs.ligo.org/ligo-segments/': None,  # ligo-segments,
-    'https://gwdatafind.readthedocs.io/en/stable/': None,  # gwdatafind,
+    "python": ("https://docs.python.org/", None),
+    "ligo-segments": ("https://lscsoft.docs.ligo.org/ligo-segments/", None),
+    "igwn-auth-utils": (
+        "https://igwn-auth-utils.readthedocs.io/en/stable/",
+        None,
+    ),
 }
 
 # The reST default role (used for this markup: `text`) to use for all
@@ -79,11 +82,11 @@ def setup_static_content(app):
 
         # add stylesheets
         for cssf in glob.glob(os.path.join(staticdir, 'css', '*.css')):
-            app.add_stylesheet(cssf[len(staticdir)+1:])
+            app.add_css_file(cssf[len(staticdir)+1:])
 
         # add custom javascript
         for jsf in glob.glob(os.path.join(staticdir, 'js', '*.js')):
-            app.add_javascript(jsf[len(staticdir)+1:])
+            app.add_js_file(jsf[len(staticdir)+1:])
 
 # -- setup --------------------------------------------------------------------
 

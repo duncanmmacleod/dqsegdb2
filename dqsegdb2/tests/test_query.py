@@ -17,9 +17,6 @@
 """Tests for :mod:`dqsegdb.api`
 """
 
-import json
-from unittest import mock
-
 import pytest
 
 from .. import query
@@ -31,18 +28,28 @@ KNOWN_COALESCED = [(2, 8)]
 ACTIVE_COALESCED = [(2, 4), (6, 8)]
 
 
-@mock.patch('dqsegdb2.query.request_json')
-def test_query_names(request_json):
+def test_query_names(requests_mock):
     names = ['name1', 'name2', 'name2']
-    request_json.return_value = {'results': names}
-    assert query.query_names('X1') == set(map('X1:{0}'.format, names))
+    requests_mock.get(
+        "https://segments.ligo.org/dq/X1",
+        json={"results": names},
+    )
+    assert query.query_names(
+        "X1",
+        host="https://segments.ligo.org",
+    ) == set(map('X1:{0}'.format, names))
 
 
-@mock.patch('dqsegdb2.query.request_json')
-def test_query_versions(request_json):
+def test_query_versions(requests_mock):
     versions = [1, 2, 3, 4]
-    request_json.return_value = {'version': versions}
-    assert query.query_versions('X1:test') == sorted(versions)
+    requests_mock.get(
+        "https://segments.ligo.org/dq/X1/test",
+        json={"version": versions},
+    )
+    assert query.query_versions(
+        "X1:test",
+        host="https://segments.ligo.org",
+    ) == sorted(versions)
 
 
 @pytest.mark.parametrize('flag, coalesce, known, active', [
@@ -51,9 +58,8 @@ def test_query_versions(request_json):
     ("X1:TEST:*", False, KNOWN + KNOWN, ACTIVE + ACTIVE),
     ("X1:TEST:*", True, KNOWN_COALESCED, ACTIVE_COALESCED),
 ])
-@mock.patch('dqsegdb2.query.query_versions', return_value=(1, 2))
-@mock.patch('dqsegdb2.http.request', return_value=mock.MagicMock())
-def test_query_segments(request, versions, flag, coalesce, known, active):
+def test_query_segments(flag, coalesce, known, active, requests_mock):
+    # mock the request
     result = {
         'ifo': 'X1',
         'name': 'TEST',
@@ -61,12 +67,26 @@ def test_query_segments(request, versions, flag, coalesce, known, active):
         'known': KNOWN,
         'active': ACTIVE
     }
-    # this mock is a bit more complicated because query_segments() pops
-    # keys out of the dict, and we want to call request_json multiple
-    # times, so we need to mock further upstream
-    request.return_value.read.return_value = json.dumps(result)
+    versions = (1, 2)
+    requests_mock.get(
+        "https://segments.ligo.org/dq/X1/TEST",
+        json={"version": versions},
+    )
+    for ver in versions:
+        requests_mock.get(
+            "https://segments.ligo.org/dq/X1/TEST/"
+            "{}?e=8&include=metadata,known,active&s=2".format(ver),
+            json=result,
+        )
 
-    out = query.query_segments(flag, 2, 8, coalesce=coalesce)
+    # check that we get the result we expect
+    out = query.query_segments(
+        flag,
+        2,
+        8,
+        coalesce=coalesce,
+        host="https://segments.ligo.org",
+    )
     assert out.pop('version') is (None if flag.endswith('*') else 1)
     assert out.pop('known') == known
     assert out.pop('active') == active
