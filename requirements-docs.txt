@@ -1,5 +1,0 @@
-numpydoc
-sphinx
-sphinx_rtd_theme
-sphinx-automodapi
-sphinx-tabs
