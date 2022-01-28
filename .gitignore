@@ -12,3 +12,4 @@ __pycache__/
 .coverage
 .pytest_cache/
 /docs/api
+/dqsegdb2/_version.py

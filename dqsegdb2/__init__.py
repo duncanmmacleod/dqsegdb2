@@ -18,6 +18,10 @@
 """A simplified Python implementation of the DQSEGDB API.
 """
 
-__version__ = '1.0.1'
+try:
+    from ._version import version as __version__
+except ModuleNotFoundError:  # development mode
+    __version__ = 'dev'
+
 __author__ = 'Duncan Macleod <duncan.macleod@ligo.org>'
 __credits__ = 'Ryan Fisher, Gary Hemming'
