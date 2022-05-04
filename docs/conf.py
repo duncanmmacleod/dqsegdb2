@@ -8,36 +8,27 @@ import re
 
 from dqsegdb2 import __version__ as VERSION
 
-extensions = [
-    'sphinx.ext.intersphinx',
-    'sphinx_automodapi.automodapi',
-    'sphinx_tabs.tabs',
-    'numpydoc',
-]
+# -- metadata
 
-#templates_path = ['_templates']
-
-source_suffix = '.rst'
-
-master_doc = 'index'
-
-# General information about the project.
 project = u'dqsegdb2'
-copyright = u'2018, Duncan Macleod'
+copyright = u'2018-2022, Cardiff University'
 author = u'Duncan Macleod'
-
-# The short X.Y version.
 version = re.split(r'[\w-]', VERSION)[0]
 # The full version, including alpha/beta/rc tags.
 release = VERSION
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+# -- config
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'monokai'
+default_role = 'obj'
+
+# -- extensions
+
+extensions = [
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx_automodapi.automodapi",
+    "sphinx_immaterial",
+]
 
 # Intersphinx directory
 intersphinx_mapping = {
@@ -49,46 +40,47 @@ intersphinx_mapping = {
     ),
 }
 
-# The reST default role (used for this markup: `text`) to use for all
-# documents.
-default_role = 'obj'
-
-# Don't inherit in automodapi
-numpydoc_show_class_members = False
+# don't inherit in automodapi
 automodapi_inherited_members = False
 
-# -- Options for HTML output ----------------------------------------------
+# -- theme
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_immaterial"
+html_theme_options = {
+    # metadata
+    "edit_uri": "blob/main/docs",
+    "repo_name": "dqsegdb2",
+    "repo_url": "https://git.ligo.org/duncanmmacleod/dqsegdb2",
+    "repo_type": "gitlab",
+    "site_url": "https://dqsegdb2.readthedocs.io/",
+    # features
+    "features": [
+        "navigation.expand",
+        "navigation.sections",
+    ],
+    # colour palette
+    "palette": [
+        {
+            "media": "(prefers-color-scheme: light)",
+            "scheme": "default",
+            "primary": "indigo",
+            "accent": "light-blue",
+            "toggle": {
+                "icon": "material/eye-outline",
+                "name": "Switch to dark mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: dark)",
+            "scheme": "slate",
+            "primary": "orange",
+            "accent": "orange",
+            "toggle": {
+                "icon": "material/eye",
+                "name": "Switch to light mode",
+            },
+        },
+    ],
+}
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = 'dqsegdb2doc'
-
-# -- add static files----------------------------------------------------------
-
-def setup_static_content(app):
-    curdir = os.path.abspath(os.path.dirname(__file__))
-    # configure stylesheets
-    for sdir in html_static_path:
-        staticdir = os.path.join(curdir, sdir)
-
-        # add stylesheets
-        for cssf in glob.glob(os.path.join(staticdir, 'css', '*.css')):
-            app.add_css_file(cssf[len(staticdir)+1:])
-
-        # add custom javascript
-        for jsf in glob.glob(os.path.join(staticdir, 'js', '*.js')):
-            app.add_js_file(jsf[len(staticdir)+1:])
-
-# -- setup --------------------------------------------------------------------
-
-def setup(app):
-    setup_static_content(app)
+html_last_updated_fmt = ""
