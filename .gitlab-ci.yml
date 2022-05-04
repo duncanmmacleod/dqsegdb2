@@ -1,0 +1,16 @@
+stages:
+  - binary packages
+  - testing
+  - code coverage
+  - documentation
+  - code quality
+
+include:
+  # Python tests
+  - local: '/.gitlab/ci/python.yml'
+  # Code coverage
+  - local: '/.gitlab/ci/coverage.yml'
+  # Code quality
+  - local: '/.gitlab/ci/analysis.yml'
+  # Documentation
+  - local: '/.gitlab/ci/docs.yml'
