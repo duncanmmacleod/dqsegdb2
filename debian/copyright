@@ -1,9 +1,9 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Contact: Duncan Macleod <duncan.macleod@ligo.org>
-Source: https://git.ligo.org/duncanmmacleod/python-pmdc
+Source: https://git.ligo.org/duncanmmacleod/dqsegdb2
 
 Files: *
-Copyright: 2018 Duncan Macleod <duncan.macleod@ligo.org>
+Copyright: 2018-2022 Cardiff University
 License: GPL-3+
 
 License: GPL-3+
