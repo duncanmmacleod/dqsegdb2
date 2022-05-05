@@ -10,6 +10,8 @@ stages:
 include:
   # tarball
   - local: '/.gitlab/ci/dist.yml'
+  # Debian packaging
+  - local: '/.gitlab/ci/debian.yml'
   # RHEL packaging
   - local: '/.gitlab/ci/rhel.yml'
   # Python tests
