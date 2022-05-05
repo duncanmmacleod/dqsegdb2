@@ -51,6 +51,15 @@ or with `Conda <https://conda.io>`__ from
 
    conda install -c conda-forge dqsegdb2
 
+===========
+Basic usage
+===========
+
+.. code-block:: python
+
+   from dqsegdb2.query import query_segments
+   print(query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000))
+
 =============
 Documentation
 =============
