@@ -39,4 +39,3 @@ filterwarnings = [
 
 [tool.setuptools_scm]
 write_to = "dqsegdb2/_version.py"
-
