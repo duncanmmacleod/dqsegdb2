@@ -13,8 +13,7 @@ dependencies:
   - requests
   - safe-netrc
   # docs
-  - numpydoc
   - sphinx
-  - sphinx_rtd_theme
   - sphinx-automodapi
-  - sphinx-tabs
+  - pip:
+    - sphinx-immaterial

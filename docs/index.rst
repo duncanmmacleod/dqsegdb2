@@ -1,5 +1,10 @@
 .. sectionauthor:: Duncan Macleod <duncan.macleod@ligo.org>
 
+.. toctree::
+   :hidden:
+
+   Home <self>
+
 ########
 DQSEGDB2
 ########
@@ -17,7 +22,8 @@ DQSEGDB2
 ``dqsegdb2`` is a simplified Python implementation of the DQSEGDB API as
 defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
 
-.. note::
+.. admonition:: Incomplete API
+    :class: info
 
     This package does not provide a complete implementation of the API
     as defined in LIGO-T1300625, and only supports ``GET`` requests for
@@ -32,23 +38,42 @@ defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
 Installation
 ============
 
+DQSEGDB2 can be installed with `Pip <https://pip.pypa.io>`__:
+
 .. code-block:: bash
 
-   $ python -m pip install dqsegdb2
+   python -m pip install dqsegdb2
 
-=====================
-Package documentation
-=====================
+or with `Conda <https://conda.io>`__ from
+`conda-forge <https://conda-forge.org>`__:
 
-.. toctree::
+.. code-block:: bash
 
-   api
-   query
+   conda install -c conda-forge dqsegdb2
 
-==================
-Indices and tables
-==================
+===========
+Basic usage
+===========
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. code-block:: python
+
+   from dqsegdb2.query import query_segments
+   print(query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000))
+
+=============
+Documentation
+=============
+
+The ``dqsegdb.query`` module defines the following functions:
+
+.. automodsumm:: dqsegdb2.query
+   :functions-only:
+   :toctree: ref
+   :caption: dqsegdb2.query
+
+The ``dqsegdb.api`` module defines the following functions:
+
+.. automodsumm:: dqsegdb2.api
+   :functions-only:
+   :toctree: ref
+   :caption: dqsegdb2.api
