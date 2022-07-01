@@ -1,5 +1,5 @@
 %define srcname dqsegdb2
-%define version 1.1.1
+%define version 1.1.2
 %define release 1
 
 Name:     python-%{srcname}
@@ -79,8 +79,8 @@ rm -rf $RPM_BUILD_ROOT
 # -- changelog
 
 %changelog
-* Thu May 05 2022 Duncan Macleod <duncan.macleod@ligo.org> - 1.1.1-1
-- update packaging for 1.1.1
+* Thu May 05 2022 Duncan Macleod <duncan.macleod@ligo.org> - 1.1.2-1
+- update packaging for 1.1.2, reinstates RPM packages
 - remove python2 packages
 - don't run pytest during build
 
