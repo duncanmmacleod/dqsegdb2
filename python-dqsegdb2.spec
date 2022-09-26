@@ -1,5 +1,5 @@
 %define srcname dqsegdb2
-%define version 1.1.2
+%define version 1.1.3
 %define release 1
 
 Name:     python-%{srcname}
@@ -79,6 +79,11 @@ rm -rf $RPM_BUILD_ROOT
 # -- changelog
 
 %changelog
+* Mon Sep 26 2022 Duncan Macleod <duncan.macleod@ligo.org> - 1.1.3-1
+- update for 1.1.3
+- update igwn-auth-utils requirement
+- remove extra Requires for igwn-auth-utils[requests]
+
 * Thu May 05 2022 Duncan Macleod <duncan.macleod@ligo.org> - 1.1.2-1
 - update packaging for 1.1.2, reinstates RPM packages
 - remove python2 packages
