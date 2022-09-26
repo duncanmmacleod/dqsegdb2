@@ -14,8 +14,7 @@ project = u'dqsegdb2'
 copyright = u'2018-2022, Cardiff University'
 author = u'Duncan Macleod'
 version = re.split(r'[\w-]', VERSION)[0]
-# The full version, including alpha/beta/rc tags.
-release = VERSION
+release = VERSION.split("+")[0]
 
 # -- config
 
@@ -24,6 +23,7 @@ default_role = 'obj'
 # -- extensions
 
 extensions = [
+    "sphinx.ext.ifconfig",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx_automodapi.automodapi",

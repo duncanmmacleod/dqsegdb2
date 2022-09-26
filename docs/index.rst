@@ -9,6 +9,16 @@
 DQSEGDB2
 ########
 
+.. ifconfig:: 'dev' in release
+
+   .. warning::
+
+      You are viewing documentation for a development build of dqsegdb2.
+      This version may include unstable code, or breaking changes relative
+      the most recent stable release.
+      To view the documentation for the latest stable release of dqsegdb2,
+      please `click here <../stable/>`_.
+
 .. image:: https://badge.fury.io/py/dqsegdb2.svg
    :target: https://badge.fury.io/py/dqsegdb2
    :alt: dqsegdb2 PyPI release badge
