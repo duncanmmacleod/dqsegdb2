@@ -5,16 +5,15 @@
 import glob
 import os.path
 import re
-
-from dqsegdb2 import __version__ as VERSION
+from importlib import metadata
 
 # -- metadata
 
-project = u'dqsegdb2'
-copyright = u'2018-2022, Cardiff University'
-author = u'Duncan Macleod'
-version = re.split(r'[\w-]', VERSION)[0]
-release = VERSION.split("+")[0]
+project = "dqsegdb2"
+copyright = "2018-2022, Cardiff University"
+author = "Duncan Macleod"
+release = metadata.version(project).split("+")[0]
+version = re.split(r"[\w-]", release)[0]
 
 # -- config
 
