@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018,2020  Duncan Macleod
+# Copyright (C) 2022 Cardiff University
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,22 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""A simplified Python implementation of the DQSEGDB API.
+"""Utilities for dqsegdb2.
 """
 
-from igwn_auth_utils.requests import Session
+import os
 
-from .query import (
-    query_ifos,
-    query_names,
-    query_versions,
-    query_segments,
+from igwn_auth_utils import get as _get
+
+DEFAULT_SEGMENT_SERVER_ENV = "DEFAULT_SEGMENT_SERVER"
+
+# set initial default
+DEFAULT_SEGMENT_SERVER = os.environ.setdefault(
+    DEFAULT_SEGMENT_SERVER_ENV,
+    "https://segments.ligo.org",
 )
 
-try:
-    from ._version import version as __version__
-except ModuleNotFoundError:  # development mode
-    __version__ = 'dev'
 
-__author__ = 'Duncan Macleod <duncan.macleod@ligo.org>'
-__credits__ = 'Ryan Fisher, Gary Hemming'
+def get_default_host():
+    """Return the default host as stored in the ``${DEFAULT_SEGMENT_SERVER}``
+    environment variable.
+    """
+    return os.environ[DEFAULT_SEGMENT_SERVER_ENV]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018,2020  Duncan Macleod
+# Copyright (C) 2018,2020,2022  Duncan Macleod
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,33 +19,94 @@
 """
 
 import os
+from functools import partial
 
 from ligo import segments
 
-from igwn_auth_utils import requests as igwn_requests
+from igwn_auth_utils.requests import Session
 
 from . import api
-
-DEFAULT_SEGMENT_SERVER = os.environ.setdefault(
-    'DEFAULT_SEGMENT_SERVER', 'https://segments.ligo.org')
-
-
-def _get_json(*args, **kwargs):
-    response = igwn_requests.get(*args, **kwargs)
-    response.raise_for_status()
-    return response.json()
+from .request import get_json
+from .utils import get_default_host
 
 
-def query_names(ifo, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
+def _url(host, path_func, *args, **kwargs):
+    """Construct the full URL for a query to ``host`` using an API path func.
+    """
+    path = path_func(*args, **kwargs)
+    if host is None:
+        host = get_default_host()
+    return f"{host.rstrip('/')}/{path.lstrip('/')}"
+
+
+def query_ifos(
+    host=None,
+    raw=False,
+    **request_kwargs,
+):
+    """Query for all defined interferometers (IFOs).
+
+    Parameters
+    ----------
+    host : `str`, optional
+        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
+        will be used to discover the default host.
+
+    raw : `bool`, optional
+        Return the full JSON response from the request.
+
+    Returns
+    -------
+    If ``raw=False``:
+
+    ifos : `set`
+        the set of all known IFO prefices.
+
+    If ``raw=True`` the full JSON response is returned.
+
+    Examples
+    --------
+    >>> from dqsegdb2.query import query_ifos
+    >>> query_ifos()
+    {'H1', 'V1', 'G1', 'K1', 'L1'}
+    >>> query_ifos(raw=True)
+    {"query_information": {
+         "start": 0,
+         "server_timestamp": 1356794344,
+         "end": 0,
+         "server_elapsed_query_time": "0.00131",
+         "include": [],
+         "uri": "/dq",
+         "api_version": "2.1.17",
+         "server": "segments"},
+     "Ifos": ["G1", "H1", "K1", "L1", "V1"]}
+    """
+    url = _url(host, api.ifos_path)
+    out = get_json(url, **request_kwargs)
+    if raw:
+        return out
+    return set(out["Ifos"])
+
+
+def query_names(
+    ifo,
+    host=None,
+    raw=False,
+    **request_kwargs,
+):
     """Query for all defined flags for the given ``ifo``
 
     Parameters
     ----------
     ifo : `str`
-        the interferometer prefix for which to query
+        The interferometer prefix for which to query.
 
     host : `str`, optional
-        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``
+        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
+        will be used to discover the default host.
+
+    raw : `bool`, optional
+        Return the full JSON response from the request.
 
     Returns
     -------
@@ -57,13 +118,15 @@ def query_names(ifo, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
     >>> from dqsegdb2.query import query_names
     >>> query_names('G1')
     """
-    url = api.name_query_url(host, ifo)
-    names = _get_json(url, **request_kwargs)['results']
-    return {'{0}:{1}'.format(ifo, name) for name in names}
+    url = _url(host, api.flags_path, ifo)
+    out = get_json(url, **request_kwargs)
+    if raw:
+        return out
+    return {f'{ifo}:{name}' for name in out['results']}
 
 
-def query_versions(flag, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
-    """Query for defined versions for the given flag
+def query_versions(flag, host=None, raw=False, **request_kwargs):
+    """Query for defined versions for the given flag.
 
     Parameters
     ----------
@@ -71,7 +134,11 @@ def query_versions(flag, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
         the name for which to query
 
     host : `str`, optional
-        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``
+        the URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
+        will be used to discover the default host
+
+    raw : `bool`, optional
+        Return the full JSON response from the request.
 
     Returns
     -------
@@ -85,45 +152,58 @@ def query_versions(flag, host=DEFAULT_SEGMENT_SERVER, **request_kwargs):
     [1, 2, 3]
     """
     ifo, name = flag.split(':', 1)
-    url = api.version_query_url(host, ifo, name)
-    return sorted(_get_json(url, **request_kwargs)['version'])
+    url = _url(host, api.versions_path, ifo, name)
+    out = get_json(url, **request_kwargs)
+    if raw:
+        return out
+    return sorted(out['version'])
 
 
 def query_segments(
     flag,
     start,
     end,
-    host=DEFAULT_SEGMENT_SERVER,
+    host=None,
     coalesce=True,
+    raw=False,
     **request_kwargs,
 ):
-    """Query for segments for the given flag in a ``[start, stop)`` interval
+    """Query for segments for the given flag in a ``[start, stop)`` interval.
 
     Parameters
     ----------
     flag : `str`
-        the name for which to query, see _Notes_ for information on how
+        The name for which to query, see _Notes_ for information on how
         versionless-flags are queried.
 
     start : `int`
-        the GPS start time.
+        The GPS start time.
 
     end : `int`
-        the GPS end time.
+        The GPS end time.
 
     host : `str`, optional
-        the URL of the database, defaults to ``DEFAULT_SEGMENT_SERVER``.
+        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
+        will be used to discover the default host.
 
     coalesce : `bool`, optional
-        if `True`, coalesce the segmentlists returned by the server,
+        If `True`, coalesce the segmentlists returned by the server,
         and restrict them to lie fully within the ``[start, end)``
         request segment, otherwise return the 'raw' result,
         default: `True`.
+        This option is ignored if ``raw=True`` is given.
+
+    raw : `bool`, optional
+        Return the full JSON response from the request.
+        If an explicit version is not given, the result will be a
+        `list` of JSON responses, one for each discovered version.
 
     Returns
     -------
+    If ``raw=False`` is given:
+
     segmentdict : `dict`
-        a `dict` with the following keys
+        A `dict` with the following keys
 
         - ``'ifo'`` - the interferometer prefix (`str`)
         - ``'name'`` - the flag name (`str`)
@@ -133,6 +213,10 @@ def query_segments(
         - ``'metadata'`` - a `dict` of flag information (`dict`)
         - ``'query_information'`` - a `dict` of query information (`dict`)
 
+    If ``raw=True`` is given, **and** the flag name includes an explicit
+    version, the result will be the raw JSON response from the single request,
+    otherwise a `list` of JSON responses will be returned.
+
     Notes
     -----
     If ``flag`` is given without a version (e.g. ``'X1:FLAG-NAME'``) or the
@@ -140,7 +224,7 @@ def query_segments(
     the query will be the intersection of queries over all versions found
     in the database.
     In that case the ``'metadata'`` and ``'query_information'`` in the output
-    will be preserved for the highest version number only.
+    will be preserved for the highest version number only (if ``raw=False``).
 
     Examples
     --------
@@ -155,24 +239,63 @@ def query_segments(
         ifo, name, version = flag.split(':', 2)
         versions = [int(version)]
     except ValueError:
+        single_version = False
         if flag.endswith(':*'):  # allow use of wildcard version
             flag = flag.rsplit(':', 1)[0]
         ifo, name = flag.split(':', 1)
-        versions = query_versions(flag, host=host)
+    else:
+        single_version = True
 
-    out = dict(
-        known=segments.segmentlist(),
-        active=segments.segmentlist(),
-        ifo=ifo,
-        name=name,
-        version=versions[0],
+    # what to ask for:
+    include = {"known", "active"}
+    if raw:
+        include.add("metadata")
+
+    # construct partial func to use for each versioned URL
+    _format_url = partial(
+        _url,
+        host,
+        api.resources_path,
+        ifo,
+        name,
+        s=start,
+        e=end,
+        include=",".join(include),
     )
 
-    with igwn_requests.Session(**request_kwargs) as sess:
-        for i, version in enumerate(sorted(versions)):
-            url = api.segment_query_url(host, ifo, name, version,
-                                        start=start, end=end)
-            result = _get_json(url, session=sess)
+    # use Session to query for and then loop over versions (if needed)
+    with Session(**request_kwargs) as sess:
+
+        if not single_version:  # query for all versions
+            versions = sorted(query_versions(flag, host=host, session=sess))
+
+        if raw and not single_version:
+            out = []
+        else:
+            # custom subset of information, with at least the following
+            # keys (and types)
+            out = dict(
+                known=segments.segmentlist(),
+                active=segments.segmentlist(),
+                ifo=ifo,
+                name=name,
+                version=version if single_version else None,
+            )
+
+
+        for version in versions:
+            url = _format_url(version)
+            result = get_json(url, session=sess)
+
+            if raw and single_version:
+                return result
+
+            if raw:
+                out.append(result)
+                continue
+
+            # if not raw, convert to segment objects
+            # and coalesce if asked
             for key in ('active', 'known'):
                 out[key].extend(segments.segmentlist(map(
                     segments.segment,
@@ -181,7 +304,5 @@ def query_segments(
                 if coalesce:
                     out[key] = out[key].coalesce() & request
             out.update(result)
-            if i:  # multiple versions:
-                out['version'] = None
 
     return out
