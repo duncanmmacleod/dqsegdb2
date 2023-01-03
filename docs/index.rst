@@ -3,7 +3,7 @@
 .. toctree::
    :hidden:
 
-   Home <self>
+   DQSEGDB2 <self>
 
 ########
 DQSEGDB2
@@ -32,46 +32,17 @@ DQSEGDB2
 ``dqsegdb2`` is a Python implementation of the DQSEGDB API as
 defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
 
-============
-Installation
-============
+.. toctree::
+    :caption: Documentation
+    :maxdepth: 1
 
-DQSEGDB2 can be installed with `Pip <https://pip.pypa.io>`__:
+    Installation <install>
+    Basic usage <intro>
+    Session usage <session>
+    Authorisation <auth>
 
-.. code-block:: bash
+.. toctree::
+    :caption: Reference
+    :maxdepth: 2
 
-   python -m pip install dqsegdb2
-
-or with `Conda <https://conda.io>`__ from
-`conda-forge <https://conda-forge.org>`__:
-
-.. code-block:: bash
-
-   conda install -c conda-forge dqsegdb2
-
-===========
-Basic usage
-===========
-
-.. code-block:: python
-
-   from dqsegdb2.query import query_segments
-   print(query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000))
-
-=============
-Documentation
-=============
-
-The ``dqsegdb.query`` module defines the following functions:
-
-.. automodsumm:: dqsegdb2.query
-   :functions-only:
-   :toctree: ref
-   :caption: dqsegdb2.query
-
-The ``dqsegdb.api`` module defines the following functions:
-
-.. automodsumm:: dqsegdb2.api
-   :functions-only:
-   :toctree: ref
-   :caption: dqsegdb2.api
+    api
