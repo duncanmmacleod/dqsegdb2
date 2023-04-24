@@ -20,14 +20,30 @@
 
 from functools import wraps
 
-from igwn_auth_utils import get as _get
+from requests import __version__ as requests_version
 
-DEFAULT_TOKEN_SCOPE = "dqsegdb.read"
+from igwn_auth_utils.requests import (
+    Session as _Session,
+    get as _get,
+)
+
+DEFAULT_TOKEN_SCOPE = "dqsegdb.read"  # noqa: S105
+
+
+class Session(_Session):
+    def __init__(self, **kwargs):
+        kwargs.setdefault("token_scope", DEFAULT_TOKEN_SCOPE)
+        super().__init__(**kwargs)
 
 
 @wraps(_get)
 def get(url, *args, **kwargs):
-    if url.startswith("http://") and requests.__version__ < "2.15.0":
+    # if given a session, use it without setting any parameters
+    if kwargs.get("session"):
+        return _get(url, *args, **kwargs)
+
+    # otherwise attempt to correctly initialise auth
+    if url.startswith("http://") and requests_version < "2.15.0":
         # workaround https://github.com/psf/requests/issues/4025
         kwargs.setdefault("cert", False)
     kwargs.setdefault("token_scope", DEFAULT_TOKEN_SCOPE)

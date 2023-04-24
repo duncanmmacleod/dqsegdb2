@@ -20,8 +20,6 @@
 
 import os
 
-from igwn_auth_utils import get as _get
-
 DEFAULT_SEGMENT_SERVER_ENV = "DEFAULT_SEGMENT_SERVER"
 
 # set initial default

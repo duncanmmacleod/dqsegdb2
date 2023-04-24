@@ -15,18 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Query methods for DQSEGDB2
+"""Query methods for DQSEGDB2.
 """
 
-import os
 from functools import partial
 
 from ligo import segments
 
-from igwn_auth_utils.requests import Session
+from igwn_auth_utils.scitokens import target_audience as scitoken_audience
 
 from . import api
-from .request import get_json
+from .requests import (
+    Session,
+    get_json,
+)
 from .utils import get_default_host
 
 
@@ -49,8 +51,9 @@ def query_ifos(
     Parameters
     ----------
     host : `str`, optional
-        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
-        will be used to discover the default host.
+        The URL of the DQSegDB server; if `None`
+        :func:`~dqsegdb2.utils.get_default_host` will be used to discover
+        the default host.
 
     raw : `bool`, optional
         Return the full JSON response from the request.
@@ -102,8 +105,9 @@ def query_names(
         The interferometer prefix for which to query.
 
     host : `str`, optional
-        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
-        will be used to discover the default host.
+        The URL of the DQSegDB server; if `None`
+        :func:`~dqsegdb2.utils.get_default_host` will be used to discover
+        the default host.
 
     raw : `bool`, optional
         Return the full JSON response from the request.
@@ -131,11 +135,12 @@ def query_versions(flag, host=None, raw=False, **request_kwargs):
     Parameters
     ----------
     flag : `str`
-        the name for which to query
+        The name for which to query.
 
     host : `str`, optional
-        the URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
-        will be used to discover the default host
+        The URL of the DQSegDB server; if `None`
+        :func:`~dqsegdb2.utils.get_default_host` will be used to discover
+        the default host.
 
     raw : `bool`, optional
         Return the full JSON response from the request.
@@ -183,8 +188,9 @@ def query_segments(
         The GPS end time.
 
     host : `str`, optional
-        The URL of the database, if `None` :func:`~dqsegdb2.utils.get_default_host`
-        will be used to discover the default host.
+        The URL of the DQSegDB server; if `None`
+        :func:`~dqsegdb2.utils.get_default_host` will be used to discover
+        the default host.
 
     coalesce : `bool`, optional
         If `True`, coalesce the segmentlists returned by the server,
@@ -260,7 +266,13 @@ def query_segments(
         name,
         s=start,
         e=end,
-        include=",".join(include),
+        include=",".join(sorted(include)),
+    )
+
+    # set default audience
+    request_kwargs.setdefault(
+        "token_audience",
+        scitoken_audience(host or get_default_host()),
     )
 
     # use Session to query for and then loop over versions (if needed)
@@ -279,9 +291,8 @@ def query_segments(
                 active=segments.segmentlist(),
                 ifo=ifo,
                 name=name,
-                version=version if single_version else None,
+                version=versions[0],
             )
-
 
         for version in versions:
             url = _format_url(version)
@@ -304,5 +315,8 @@ def query_segments(
                 if coalesce:
                     out[key] = out[key].coalesce() & request
             out.update(result)
+
+        if len(versions) > 1 and not raw:  # unset the version if multiple
+            out["version"] = None
 
     return out

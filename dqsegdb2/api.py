@@ -24,7 +24,7 @@ This attemps to define the endpoints for various actions as defined in
 from functools import wraps
 from urllib.parse import urlencode
 
-API_BASE_PATH = "dq"
+API_BASE_PATH = "/dq"
 
 
 def _query_string(**params):
@@ -113,7 +113,7 @@ def insert_history_path(ifo, flag, version, s=None, e=None):
 def report_path():
     """Return the API path to quey for a data-quality report.
     """
-    return f"report"
+    return "/report"
 
 
 def report_flags_path():
@@ -150,6 +150,7 @@ def report_known_path(s=None, e=None):
 
 @_query_params
 def report_active_path(s=None, e=None):
-    """Return the API path to query for a report of all flags in the active state.
+    """Return the API path to query for a report of all
+    flags in the active state.
     """
     return f"{report_path()}/active"

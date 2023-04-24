@@ -18,14 +18,13 @@
 """A simplified Python implementation of the DQSEGDB API.
 """
 
-from igwn_auth_utils.requests import Session
-
 from .query import (
     query_ifos,
     query_names,
     query_versions,
     query_segments,
 )
+from .requests import Session
 
 try:
     from ._version import version as __version__
