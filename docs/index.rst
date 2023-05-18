@@ -42,7 +42,10 @@ defined in `LIGO-T1300625 <https://dcc.ligo.org/LIGO-T1300625/public>`__.
     Authorisation <auth>
 
 .. toctree::
-    :caption: Reference
-    :maxdepth: 2
+    :caption: Module documentation
+    :maxdepth: 1
 
+    query
     api
+    requests
+    utils

@@ -18,8 +18,6 @@
 """Request interface for dqsegdb2.
 """
 
-from functools import wraps
-
 from requests import __version__ as requests_version
 
 from igwn_auth_utils.requests import (
@@ -36,8 +34,17 @@ class Session(_Session):
         super().__init__(**kwargs)
 
 
-@wraps(_get)
 def get(url, *args, **kwargs):
+    """Send an HTTP GET request to a DQSegDB URL with IGWN Auth attached.
+
+    This thin wrapper just sets the correct default `token_scope`
+    argument.
+
+    See also
+    --------
+    igwn_auth_utils.get
+        For documentation of all arguments and keywords
+    """
     # if given a session, use it without setting any parameters
     if kwargs.get("session"):
         return _get(url, *args, **kwargs)
