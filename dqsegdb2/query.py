@@ -58,14 +58,16 @@ def query_ifos(
     raw : `bool`, optional
         Return the full JSON response from the request.
 
+    request_kwargs
+        Other keyword arguments are passed to :func:`igwn_auth_utils.get`.
+
     Returns
     -------
-    If ``raw=False``:
+    `set`
+        If ``raw=False``: the set of all known IFO prefices.
 
-    ifos : `set`
-        the set of all known IFO prefices.
-
-    If ``raw=True`` the full JSON response is returned.
+    `dict`
+        If ``raw=True``: the full JSON response is returned.
 
     Examples
     --------
@@ -75,12 +77,12 @@ def query_ifos(
     >>> query_ifos(raw=True)
     {"query_information": {
          "start": 0,
-         "server_timestamp": 1356794344,
+         "server_timestamp": 1234567890,
          "end": 0,
-         "server_elapsed_query_time": "0.00131",
+         "server_elapsed_query_time": "0.12345",
          "include": [],
          "uri": "/dq",
-         "api_version": "2.1.17",
+         "api_version": "1.2.34",
          "server": "segments"},
      "Ifos": ["G1", "H1", "K1", "L1", "V1"]}
     """
@@ -112,15 +114,25 @@ def query_names(
     raw : `bool`, optional
         Return the full JSON response from the request.
 
+    request_kwargs
+        Other keyword arguments are passed to :func:`igwn_auth_utils.get`.
+
     Returns
     -------
-    flags : `set`
-        the set of all define flag names in the format ``{ifo}:{name}``
+    `set`
+        If ``raw=False`` the set of all define flag names in the format
+        ``{ifo}:{name}``.
+
+    `dict`
+        If ``raw=True``: the full JSON response is returned.
 
     Examples
     --------
     >>> from dqsegdb2.query import query_names
-    >>> query_names('G1')
+    >>> query_names('X1')
+    {'G1:GEO-FLAG_1', 'G1:GEO-FLAG_2'}
+    >>> query_names('X1', raw=True)
+    {'results': ['GEO-FLAG_1', 'GEO-FLAG_2'], 'query_information': ...}
     """
     url = _url(host, api.flags_path, ifo)
     out = get_json(url, **request_kwargs)
@@ -145,16 +157,26 @@ def query_versions(flag, host=None, raw=False, **request_kwargs):
     raw : `bool`, optional
         Return the full JSON response from the request.
 
+    request_kwargs
+        Other keyword arguments are passed to :func:`igwn_auth_utils.get`.
+
     Returns
     -------
-    versions : `list` of `int`
-        the list of defined versions for the given flag
+    `list` of `int`
+        If ``raw=False`` (default), the list of defined versions
+        for the given flag.
+
+    `dict`
+        If ``raw=True``: the full JSON response is returned.
 
     Examples
     --------
     >>> from dqsegdb2.query import query_versions
     >>> query_versions('G1:GEO-SCIENCE')
     [1, 2, 3]
+    >>> query_versions('G1:GEO-SCIENCE', raw=True)
+    {'resource_type': 'version', 'version': [1, 2, 3],
+     'query_information': ...}
     """
     ifo, name = flag.split(':', 1)
     url = _url(host, api.versions_path, ifo, name)
@@ -181,10 +203,10 @@ def query_segments(
         The name for which to query, see _Notes_ for information on how
         versionless-flags are queried.
 
-    start : `int`
+    start : `float`
         The GPS start time.
 
-    end : `int`
+    end : `float`
         The GPS end time.
 
     host : `str`, optional
@@ -204,12 +226,13 @@ def query_segments(
         If an explicit version is not given, the result will be a
         `list` of JSON responses, one for each discovered version.
 
+    request_kwargs
+        Other keyword arguments are passed to :func:`igwn_auth_utils.get`.
+
     Returns
     -------
-    If ``raw=False`` is given:
-
-    segmentdict : `dict`
-        A `dict` with the following keys
+    `dict`
+        If ``raw=False`` (default): a `dict` with the following keys
 
         - ``'ifo'`` - the interferometer prefix (`str`)
         - ``'name'`` - the flag name (`str`)
@@ -219,9 +242,10 @@ def query_segments(
         - ``'metadata'`` - a `dict` of flag information (`dict`)
         - ``'query_information'`` - a `dict` of query information (`dict`)
 
-    If ``raw=True`` is given, **and** the flag name includes an explicit
-    version, the result will be the raw JSON response from the single request,
-    otherwise a `list` of JSON responses will be returned.
+    `object`
+        If ``raw=True`` is given, **and** the flag name includes an explicit
+        version, the result will be the raw JSON response from the single
+        request, otherwise a `list` of JSON responses will be returned.
 
     Notes
     -----

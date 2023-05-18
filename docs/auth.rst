@@ -28,25 +28,25 @@ DQSEGDB servers may be operated with support for
 `SciTokens <https://scitokens.org>`__, an implementation of
 JSON Web Tokens designed for distributed scientific computing.
 
-When using the :doc:`API <api>`, the following keyword arguments
+When using the :doc:`query functions <api>`, the following keyword arguments
 can be used with all functions to control the use of SciTokens:
 
 ``token``
-    Default: `None`
+    **Default**: `None`
 
-    A bearer token (:external+scitokens:class:`scitokens.scitokens.SciToken`)
+    A bearer token (:external+scitokens:class:`~scitokens.scitokens.SciToken`)
     to use to authorise the request.
 
-    Pass `token=False` to disable any use of SciTokens.
+    Pass ``token=False`` to disable any use of SciTokens.
 
 ``token_audience``
-    Default: ``<host>`` (i.e. the value of the ``host`` keyword)
+    **Default**: ``<scheme://host>`` (the fully-qualified ``host`` URI)
 
     The expected value of the ``aud`` token claim, which should match
     the fully-qualified URL of the GWDataFind host.
 
 ``token_scope``
-    Default: ``"dqsegdb.read"``
+    **Default**: ``"dqsegdb.read"``
 
     The expected value of ``scope`` token claim.
     At the time of writing, only ``"dqsegdb.read"`` is supported.
@@ -60,7 +60,7 @@ can be used with all functions to control the use of SciTokens:
 
     SciTokens are the primary authorisation credential supported by
     the International Gravitational-Wave Observatory Network (IGWN),
-    replace X.509.
+    replacing X.509.
 
     If you can use scitokens instead of X.509, please do so.
 
@@ -82,7 +82,7 @@ When using the :doc:`API <api>`, the following keyword arguments
 can be used to control the use of X.509 credentials:
 
 ``cert``
-    Default: the value returned by
+    **Default**: the value returned by
     :external+igwn-auth-utils:py:func:`igwn_auth_utils.find_x509_credentials`
     (or `None`)
 

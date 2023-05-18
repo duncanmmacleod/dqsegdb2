@@ -15,4 +15,5 @@ Submodules
 
 .. toctree::
 
+   api/dqsegdb2.api
    api/dqsegdb2.utils
