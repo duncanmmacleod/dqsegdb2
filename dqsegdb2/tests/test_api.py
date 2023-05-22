@@ -20,19 +20,124 @@
 from .. import api
 
 
-def test_segment_query_url():
-    assert api.segment_query_url('http://test.com', 'X1', 'FLAG', 1,
-                                 start=100, end=200) == (
-        'http://test.com/dq/X1/FLAG/1?'
-        'e=200&include=metadata,known,active&s=100'
+def test_ifos_path():
+    assert api.ifos_path() == "/dq"
+
+
+def test_flags_path():
+    assert api.flags_path("X1") == "/dq/X1"
+
+
+def test_versions_path():
+    assert api.versions_path("X1", "TEST") == "/dq/X1/TEST"
+
+
+def test_resources_path():
+    assert api.resources_path("X1", "TEST", 9) == "/dq/X1/TEST/9"
+
+
+def test_resources_path_params():
+    assert api.resources_path(
+        "X1",
+        "TEST",
+        9,
+        s=1234,
+        e=5678,
+    ) == "/dq/X1/TEST/9?s=1234&e=5678"
+
+
+def test_metadata_path():
+    assert api.metadata_path("X1", "TEST", 9) == "/dq/X1/TEST/9/metadata"
+
+
+def test_metadata_path_params():
+    assert api.metadata_path(
+        "X1",
+        "TEST",
+        9,
+        s=1234,
+        e=5678,
+    ) == "/dq/X1/TEST/9/metadata?s=1234&e=5678"
+
+
+def test_active_path():
+    assert api.active_path("X1", "TEST", 9) == "/dq/X1/TEST/9/active"
+
+
+def test_active_path_params():
+    assert api.active_path(
+        "X1",
+        "TEST",
+        9,
+        s=1234,
+        e=5678,
+    ) == "/dq/X1/TEST/9/active?s=1234&e=5678"
+
+
+def test_known_path():
+    assert api.known_path("X1", "TEST", 9) == "/dq/X1/TEST/9/known"
+
+
+def test_known_path_params():
+    assert api.known_path(
+        "X1",
+        "TEST",
+        9,
+        s=1234,
+        e=5678,
+    ) == "/dq/X1/TEST/9/known?s=1234&e=5678"
+
+
+def test_insert_history_path():
+    assert (
+        api.insert_history_path("X1", "TEST", 9)
+        == "/dq/X1/TEST/9/insert_history"
     )
 
 
-def test_version_query_url():
-    assert api.version_query_url('http://test.com', 'X1', 'FLAG') == (
-        'http://test.com/dq/X1/FLAG')
+def test_insert_history_path_params():
+    assert api.insert_history_path(
+        "X1",
+        "TEST",
+        9,
+        s=1234,
+        e=5678,
+    ) == "/dq/X1/TEST/9/insert_history?s=1234&e=5678"
 
 
-def test_name_query_url():
-    assert api.name_query_url('http://test.com', 'X1') == (
-        'http://test.com/dq/X1')
+def test_report_path():
+    assert api.report_path() == "/report"
+
+
+def test_report_flags_path():
+    assert api.report_flags_path() == "/report/flags"
+
+
+def test_report_coverage_path():
+    assert api.report_coverage_path() == "/report/coverage"
+
+
+def test_report_db_path():
+    assert api.report_db_path() == "/report/db"
+
+
+def test_report_process_path():
+    assert api.report_process_path() == "/report/process"
+
+
+def test_report_known_path():
+    assert api.report_known_path() == "/report/known"
+
+
+def test_report_known_path_params():
+    assert api.report_known_path(
+        s=1234,
+        e=5678,
+    ) == "/report/known?s=1234&e=5678"
+
+
+def test_report_active_path():
+    assert api.report_active_path(
+        s=1234,
+        e=5678,
+    ) == "/report/active?s=1234&e=5678"

@@ -1,5 +1,6 @@
 # filetypes to ignore
 *.pyc
+*.swp
 .DS_store
 
 # build files/directories to ignore
@@ -11,5 +12,5 @@
 __pycache__/
 .coverage
 .pytest_cache/
-/docs/ref
+/docs/api/
 /dqsegdb2/_version.py

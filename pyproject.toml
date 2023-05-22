@@ -35,6 +35,7 @@ precision = 1
 addopts = "-r a"
 filterwarnings = [
 	"error",
+	"ignore:.*pkg_resources.*",
 ]
 
 [tool.setuptools_scm]

@@ -11,6 +11,8 @@ select =
 	# pycodestyle warnings
 	W,
 ignore =
+	# requests call without timeout
+	S113,
 	# line break before binary operator, use W504
 	W503,
 exclude =
