@@ -23,6 +23,7 @@ import os
 from ligo import segments
 
 from igwn_auth_utils import requests as igwn_requests
+from igwn_auth_utils.scitokens import target_audience as scitoken_audience
 
 from . import api
 
@@ -167,6 +168,13 @@ def query_segments(
         name=name,
         version=versions[0],
     )
+
+    # set default audience
+    if host:
+        request_kwargs.setdefault(
+            "token_audience",
+            scitoken_audience(host),
+        )
 
     with igwn_requests.Session(**request_kwargs) as sess:
         for i, version in enumerate(sorted(versions)):
