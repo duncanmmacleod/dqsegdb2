@@ -14,13 +14,15 @@ install:
   - conda config --set channel_priority strict
   - conda config --add channels conda-forge
   - appveyor-retry conda create --quiet --yes --name ci
-        "igwn-auth-utils>=0.1.1"
+        "igwn-auth-utils>=0.3.1"
         "ligo-segments>=1.0.0"
         "pip"
-        "pytest"
-        "pytest-cov"
+        "pytest>=2.9.2"
+        "pytest-cov>=2.5.1"
         "python=%PYTHON_VERSION%"
-        "setuptools>=27.3"
+        "requests-mock>=1.5.0"
+        "setuptools>=42"
+        "setuptools-scm>=3.4.3"
   - conda activate ci
   - conda info --all
   - conda list
