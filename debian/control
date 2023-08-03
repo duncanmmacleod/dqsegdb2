@@ -22,7 +22,7 @@ Architecture: all
 Depends:
  ${misc:Depends},
  ${python3:Depends},
- python3-igwn-auth-utils (>= 0.3.1),
+ python3-igwn-auth-utils (>= 0.4.0),
  python3-ligo-segments (>= 1.0.0),
 Description: simplified Python 3 interface to DQSEGDB
  DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as
