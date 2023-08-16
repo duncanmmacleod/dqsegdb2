@@ -1,3 +1,10 @@
+dqsegdb2 (1.2.0-1) unstable; urgency=low
+
+  * update for 1.2.0
+  * update igwn-auth-utils minimum requirement
+
+ -- Duncan Macleod <duncan.macleod@ligo.org>  Wed, 16 Aug 2023 10:48:00 +0100
+
 dqsegdb2 (1.1.4-1) unstable; urgency=low
 
   * update for 1.1.4

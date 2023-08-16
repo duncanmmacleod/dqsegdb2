@@ -77,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 # -- changelog
 
 %changelog
+* Wed Aug 16 2023 Duncan Macleod <duncan.macleod@ligo.org> - 1.2.0-1
+- update for 1.2.0
+- update igwn-auth-utils minimum requirement
+
 * Tue May 23 2023 Duncan Macleod <duncan.macleod@ligo.org> - 1.1.4-1
 - update for 1.1.4
 
