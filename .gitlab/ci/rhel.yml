@@ -137,10 +137,14 @@ rpm:el9:
           python${PY3}-pytest
           python${PY3}-pytest-cov
           python${PY3}-requests-mock
-    # upgrade coverage.py to >=5 so that .coverage files use new format
-    - python3 -m pip install "coverage>=5" --upgrade-strategy=only-if-needed
     # install our package(s)
     - yum -y -q install *.rpm
+    # upgrade coverage.py to >=5 so that .coverage files use new format
+    - if [[ "${CI_JOB_NAME}" == *"el7" ]] || [[ "${CI_JOB_NAME}" == *"el8" ]]; then
+      yum -y -q install python${PY3}-pip &&
+      python3 -m pip install --upgrade-strategy=only-if-needed
+          "coverage>=5"
+      ; fi
   artifacts:
     reports:
       junit: null
