@@ -13,14 +13,22 @@ include:
 # -- macros
 
 .el7:
-  image: igwn/builder:el7-testing
+  image: igwn/base:el7-testing
   variables:
     EPEL: "true"
 
+.el7-build:
+  extends: .el7
+  image: igwn/builder:el7-testing
+
 .el8:
-  image: igwn/builder:el8-testing
+  image: igwn/base:el8-testing
   variables:
     EPEL: "true"
+
+.el8-build:
+  extends: .el8
+  image: igwn/builder:el8-testing
 
 # -- source packages --------
 #
@@ -52,12 +60,12 @@ include:
 srpm:el7:
   extends:
     - .srpm
-    - .el7
+    - .el7-build
 
 srpm:el8:
   extends:
     - .srpm
-    - .el8
+    - .el8-build
 
 # -- binary packages --------
 #
@@ -76,14 +84,14 @@ srpm:el8:
 rpm:el7:
   extends:
     - .rpm
-    - .el7
+    - .el7-build
   needs:
     - srpm:el7
 
 rpm:el8:
   extends:
     - .rpm
-    - .el8
+    - .el8-build
   needs:
     - srpm:el8
 
@@ -118,7 +126,6 @@ test:el7:
   extends:
     - .test:el
     - .el7
-  image: igwn/base:el7-testing
   needs:
     - rpm:el7
   before_script:
@@ -145,7 +152,6 @@ test:el8:
   extends:
     - .test:el
     - .el8
-  image: igwn/base:el8-testing
   needs:
     - rpm:el8
 
