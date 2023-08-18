@@ -16,19 +16,12 @@ Vendor:   Duncan Macleod <duncan.macleod@ligo.org>
 
 BuildArch: noarch
 
-# macros
-BuildRequires: python-rpm-macros
-BuildRequires: python-srpm-macros
-BuildRequires: python3-rpm-macros
-
 # build
-BuildRequires: python%{python3_pkgversion} >= 3.6
+BuildRequires: python%{python3_pkgversion}-devel >= 3.6
+BuildRequires: python%{python3_pkgversion}-pip
 BuildRequires: python%{python3_pkgversion}-setuptools
 BuildRequires: python%{python3_pkgversion}-setuptools_scm
 BuildRequires: python%{python3_pkgversion}-wheel
-
-# test
-BuildRequires: python%{python3_pkgversion}-pip
 
 %description
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
