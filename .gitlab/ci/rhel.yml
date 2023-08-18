@@ -197,6 +197,11 @@ test:el9:
   variables:
     GIT_STRATEGY: fetch
     RPMLINT_OPTIONS: '--info --file .rpmlintrc'
+    RPMS: "./*.rpm \"*dqsegdb2*\""
+  before_script:
+    - !reference [".rhel:lint", before_script]
+    # install the RPMS first
+    - "${DNF} -y -q install *.rpm"
 
 rpmlint:el7:
   extends:
