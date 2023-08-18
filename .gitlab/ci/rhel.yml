@@ -37,7 +37,9 @@ include:
 
 .el9-build:
   extends: .el9
-  image: igwn/builder:el9-testing
+  # igwn/builder isn't built for el9-testing yet
+  #image: igwn/builder:el9-testing
+  image: igwn/base:el9-testing
 
 # -- source packages --------
 #
