@@ -30,6 +30,15 @@ include:
   extends: .el8
   image: igwn/builder:el8-testing
 
+.el9:
+  image: igwn/base:el9-testing
+  variables:
+    EPEL: "true"
+
+.el9-build:
+  extends: .el9
+  image: igwn/builder:el9-testing
+
 # -- source packages --------
 #
 # These jobs make src RPMs
@@ -67,6 +76,11 @@ srpm:el8:
     - .srpm
     - .el8-build
 
+srpm:el9:
+  extends:
+    - .srpm
+    - .el9-build
+
 # -- binary packages --------
 #
 # These jobs generate binary RPMs
@@ -94,6 +108,13 @@ rpm:el8:
     - .el8-build
   needs:
     - srpm:el8
+
+rpm:el9:
+  extends:
+    - .rpm
+    - .el9-build
+  needs:
+    - srpm:el9
 
 # -- test -------------------
 
@@ -155,6 +176,13 @@ test:el8:
   needs:
     - rpm:el8
 
+test:el9:
+  extends:
+    - .test:el
+    - .el9
+  needs:
+    - rpm:el9
+
 # -- lint -------------------
 #
 # These jobs check the code
@@ -183,3 +211,10 @@ rpmlint:el8:
     - .el8
   needs:
     - rpm:el8
+
+rpmlint:el9:
+  extends:
+    - .rpmlint
+    - .el9
+  needs:
+    - rpm:el9
