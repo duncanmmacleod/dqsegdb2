@@ -57,6 +57,7 @@ client available from https://github.com/ligovirgo/dqsegdb/.
 %py3_install_wheel dqsegdb2-%{version}-*.whl
 
 %check
+PYTHONPATH="%{buildroot}%{python3_sitelib}" \
 %{__python3} -m pip show dqsegdb2 -f
 
 %clean
