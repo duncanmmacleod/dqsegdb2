@@ -300,10 +300,15 @@ def query_segments(
     )
 
     # use Session to query for and then loop over versions (if needed)
-    with Session(**request_kwargs) as sess:
+    with Session() as sess:
 
         if not single_version:  # query for all versions
-            versions = sorted(query_versions(flag, host=host, session=sess))
+            versions = sorted(query_versions(
+                flag,
+                host=host,
+                session=sess,
+                **request_kwargs,
+            ))
 
         if raw and not single_version:
             out = []
@@ -320,7 +325,7 @@ def query_segments(
 
         for version in versions:
             url = _format_url(version)
-            result = get_json(url, session=sess)
+            result = get_json(url, session=sess, **request_kwargs)
 
             if raw and single_version:
                 return result
