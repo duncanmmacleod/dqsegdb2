@@ -35,7 +35,7 @@ client available from https://github.com/ligovirgo/dqsegdb/.
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:  Simplified Python %{python3_version} interface to DQSEGDB
 Requires: python%{python3_pkgversion} >= 3.6
-Requires: python%{python3_pkgversion}-igwn-auth-utils >= 0.4.0
+Requires: python%{python3_pkgversion}-igwn-auth-utils >= 1.0.0
 Requires: python%{python3_pkgversion}-ligo-segments >= 1.0.0
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
 %description -n python%{python3_pkgversion}-%{srcname}
