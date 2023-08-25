@@ -1,5 +1,5 @@
 %define srcname dqsegdb2
-%define version 1.1.4
+%define version 1.2.1
 %define release 1
 
 Name:     python-%{srcname}
@@ -70,6 +70,10 @@ rm -rf $RPM_BUILD_ROOT
 # -- changelog
 
 %changelog
+* Fri Aug 25 2023 Duncan Macleod <duncan.macleod@ligo.org> - 1.2.1-1
+- update for 1.2.1
+- update igwn-auth-utils minimum requirement
+
 * Wed Aug 16 2023 Duncan Macleod <duncan.macleod@ligo.org> - 1.2.0-1
 - update for 1.2.0
 - update igwn-auth-utils minimum requirement
