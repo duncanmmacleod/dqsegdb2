@@ -121,8 +121,6 @@ deb:bookworm:
           python3-pytest
           python3-pytest-cov
           python3-requests-mock
-    # upgrade coverage.py to >=5 so that .coverage files use new format
-    - python3 -m pip install "coverage>=5" --upgrade-strategy=only-if-needed
 
 test:bullseye:
   extends:
