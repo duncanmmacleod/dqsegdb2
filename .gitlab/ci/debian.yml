@@ -12,11 +12,19 @@ include:
 
 # -- macros
 
-.buster:
-  image: igwn/builder:buster
-
 .bullseye:
+  image: igwn/base:bullseye
+
+.bullseye-builder:
+  extends: .bullseye
   image: igwn/builder:bullseye
+
+.bookworm:
+  image: igwn/base:bookworm
+
+.bookworm-builder:
+  extends: .bookworm
+  image: igwn/builder:bookworm
 
 # -- source packages --------
 #
@@ -46,15 +54,15 @@ include:
     # repack the tarball
     - tar -zcf ${TARBALL} */
 
-dsc:buster:
-  extends:
-    - .dsc
-    - .buster
-
 dsc:bullseye:
   extends:
     - .dsc
-    - .bullseye
+    - .bullseye-builder
+
+dsc:bookworm:
+  extends:
+    - .dsc
+    - .bookworm-builder
 
 # -- binary packages --------
 #
@@ -71,19 +79,19 @@ dsc:bullseye:
   variables:
     DSC: "dqsegdb2_*.dsc"
 
-deb:buster:
-  extends:
-    - .deb
-    - .buster
-  needs:
-    - dsc:buster
-
 deb:bullseye:
   extends:
     - .deb
-    - .bullseye
+    - .bullseye-builder
   needs:
     - dsc:bullseye
+
+deb:bookworm:
+  extends:
+    - .deb
+    - .bookworm-builder
+  needs:
+    - dsc:bookworm
 
 # -- test -------------------
 
@@ -113,24 +121,20 @@ deb:bullseye:
           python3-pytest
           python3-pytest-cov
           python3-requests-mock
-    # upgrade coverage.py to >=5 so that .coverage files use new format
-    - python3 -m pip install "coverage>=5" --upgrade-strategy=only-if-needed
-
-test:buster:
-  extends:
-    - .test:debian
-    - .buster
-  image: igwn/base:buster
-  needs:
-    - deb:buster
 
 test:bullseye:
   extends:
     - .test:debian
     - .bullseye
-  image: igwn/base:bullseye
   needs:
     - deb:bullseye
+
+test:bookworm:
+  extends:
+    - .test:debian
+    - .bookworm
+  needs:
+    - deb:bookworm
 
 # -- lint -------------------
 #
@@ -144,14 +148,7 @@ test:bullseye:
     - .debian:lint
   stage: code quality
   variables:
-    LINTIAN_OPTIONS: "--color always --suppress-tags new-package-should-close-itp-bug,latest-debian-changelog-entry-without-new-version --fail-on-warnings --allow-root --pedantic"
-
-lintian:buster:
-  extends:
-    - .lintian
-    - .buster
-  needs:
-    - deb:buster
+    LINTIAN_OPTIONS: "--color always --suppress-tags new-package-should-close-itp-bug,groff-message --fail-on error,warning --allow-root --pedantic"
 
 lintian:bullseye:
   extends:
@@ -159,5 +156,10 @@ lintian:bullseye:
     - .bullseye
   needs:
     - deb:bullseye
-  variables:
-    LINTIAN_OPTIONS: "--color always --suppress-tags new-package-should-close-itp-bug,groff-message --fail-on warning --allow-root --pedantic"
+
+lintian:bookworm:
+  extends:
+    - .lintian
+    - .bookworm
+  needs:
+    - deb:bookworm
