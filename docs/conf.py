@@ -19,7 +19,6 @@ version = re.split(r"[\w-]", release)[0]
 # -- config
 
 default_role = "obj"
-pygments_style = "monokai"
 
 # -- extensions
 
@@ -59,4 +58,4 @@ automodapi_inherited_members = False
 
 # -- theme
 
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
