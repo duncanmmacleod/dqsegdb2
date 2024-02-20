@@ -16,7 +16,12 @@ Vendor:   Duncan Macleod <duncan.macleod@ligo.org>
 
 BuildArch: noarch
 
-# build
+# -- build requirements -----
+
+# static build requirements
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 9
+BuildRequires: pyproject-rpm-macros
+%endif
 BuildRequires: python%{python3_pkgversion}-devel >= 3.6
 BuildRequires: python%{python3_pkgversion}-pip
 BuildRequires: python%{python3_pkgversion}-setuptools
@@ -49,16 +54,47 @@ client available from https://github.com/ligovirgo/dqsegdb/.
 
 %prep
 %autosetup -n %{srcname}-%{version}
+# for RHEL < 9 hack together setup.{cfg,py} for old setuptools
+%if 0%{?rhel} > 0 || 0%{?rhel} < 9
+cat > setup.cfg <<EOF
+[metadata]
+name = %{srcname}
+version = %{version}
+author-email = %{packager}
+description = %{summary}
+license = %{license}
+license_files = LICENSE
+url = %{url}
+[options]
+packages = find:
+python_requires = >=3.6
+install_requires =
+	igwn-auth-utils >= 1.0.0
+	ligo-segments >= 1.0.0
+EOF
+cat > setup.py <<EOF
+from setuptools import setup
+setup(use_scm_version=True)
+EOF
+%endif
 
 %build
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 9
+%pyproject_wheel
+%else
 %py3_build_wheel
+%endif
 
 %install
-%py3_install_wheel dqsegdb2-%{version}-*.whl
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 9
+%pyproject_install
+%else
+%py3_install_wheel %{srcname}-%{version}-*.whl
+%endif
 
 %check
 PYTHONPATH="%{buildroot}%{python3_sitelib}" \
-%{__python3} -m pip show dqsegdb2 -f
+%{__python3} -m pip show %{srcname} -f
 
 %clean
 rm -rf $RPM_BUILD_ROOT
