@@ -13,9 +13,17 @@ include:
 # -- macros
 
 .bullseye:
+  image: igwn/base:bullseye
+
+.bullseye-builder:
+  extends: .bullseye
   image: igwn/builder:bullseye
 
 .bookworm:
+  image: igwn/base:bookworm
+
+.bookworm-builder:
+  extends: .bookworm
   image: igwn/builder:bookworm
 
 # -- source packages --------
@@ -49,12 +57,12 @@ include:
 dsc:bullseye:
   extends:
     - .dsc
-    - .bullseye
+    - .bullseye-builder
 
 dsc:bookworm:
   extends:
     - .dsc
-    - .bookworm
+    - .bookworm-builder
 
 # -- binary packages --------
 #
@@ -74,14 +82,14 @@ dsc:bookworm:
 deb:bullseye:
   extends:
     - .deb
-    - .bullseye
+    - .bullseye-builder
   needs:
     - dsc:bullseye
 
 deb:bookworm:
   extends:
     - .deb
-    - .bookworm
+    - .bookworm-builder
   needs:
     - dsc:bookworm
 
@@ -120,7 +128,6 @@ test:bullseye:
   extends:
     - .test:debian
     - .bullseye
-  image: igwn/base:bullseye
   needs:
     - deb:bullseye
 
@@ -128,7 +135,6 @@ test:bookworm:
   extends:
     - .test:debian
     - .bookworm
-  image: igwn/base:bookworm
   needs:
     - deb:bookworm
 
