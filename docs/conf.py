@@ -19,7 +19,6 @@ version = re.split(r"[\w-]", release)[0]
 # -- config
 
 default_role = "obj"
-pygments_style = "monokai"
 
 # -- extensions
 
