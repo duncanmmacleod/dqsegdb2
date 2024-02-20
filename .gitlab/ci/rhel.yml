@@ -58,15 +58,15 @@ include:
   before_script:
     - !reference [".rhel:srpm", "before_script"]
     # hack the spec file to use the correct package version
-    - tar --file ${TARBALL} --wildcards --strip-components 1 --get dqsegdb2*/*.spec dqsegdb2*/PKG-INFO
+    - tar --file ${TARBALL} --wildcards --strip-components 1 --get dqsegdb2*/rpm/*.spec dqsegdb2*/PKG-INFO
     - PKG_VERSION=$(grep ^Version PKG-INFO | cut -d\  -f2)
-    - sed -i 's|define version\( *\)\(.*\)|define unmangled_version '${PKG_VERSION}'\n%define version '${PKG_VERSION/-/+}'|' *.spec
-    - sed -i 's|pypi_source|pypi_source %{srcname} %{unmangled_version}|' *.spec
+    - sed -i 's|define version\( *\)\(.*\)|define unmangled_version '${PKG_VERSION}'\n%define version '${PKG_VERSION/-/+}'|' rpm/*.spec
+    - sed -i 's|pypi_source|pypi_source %{srcname} %{unmangled_version}|' rpm/*.spec
   script:
     - rpmbuild -bs
           --define "_srcrpmdir ${CI_PROJECT_DIR}"
           --define "_sourcedir ${CI_PROJECT_DIR}"
-          *.spec
+          rpm/*.spec
 
 srpm:el7:
   extends:

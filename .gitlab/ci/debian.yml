@@ -85,6 +85,10 @@ deb:bullseye:
     - .bullseye-builder
   needs:
     - dsc:bullseye
+  # pybuild-plugin-pyproject is only on backports
+  image: igwn/builder:bullseye-backports
+  variables:
+    APT_GET_OPTIONS: "-o Debug::pkgProblemResolver=yes --no-install-recommends -t bullseye-backports"
 
 deb:bookworm:
   extends:

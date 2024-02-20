@@ -28,7 +28,7 @@ flake8:
     # merge_request UI
     FLAKE8_OPTIONS: "--exit-zero"
   before_script:
-    # pick requirements out of the setup.cfg
+    # pick requirements out of the metadata
     - ${PYTHON} -m pip install setuptools --upgrade-strategy=only-if-needed
     - |
       REQUIREMENTS=$(${PYTHON} -c "
