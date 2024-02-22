@@ -7,3 +7,11 @@ export PYBUILD_DISABLE = test
 		--buildsystem=pybuild \
 		--with python3 \
 	;
+
+override_dh_installman:
+	python3 -c "from setuptools import setup; setup()" \
+		--command-packages=click_man.commands \
+		man_pages \
+		--target debian/tmp/man/ \
+	;
+	dh_installman -O--buildsystem=pybuild

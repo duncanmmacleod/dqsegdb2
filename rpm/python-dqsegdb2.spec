@@ -27,6 +27,13 @@ BuildRequires: python%{python3_pkgversion}-pip
 BuildRequires: python%{python3_pkgversion}-setuptools
 BuildRequires: python%{python3_pkgversion}-setuptools_scm
 BuildRequires: python%{python3_pkgversion}-wheel
+# for man pages:
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 8
+BuildRequires: python%{python3_pkgversion}-click
+BuildRequires: python%{python3_pkgversion}-click-man
+BuildRequires: python%{python3_pkgversion}-igwn-auth-utils
+BuildRequires: python%{python3_pkgversion}-ligo-segments
+%endif
 
 %description
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
@@ -35,11 +42,12 @@ This package only provides a query interface for `GET` requests, any users
 wishing to make `POST` requests should refer to the official `dqsegdb` Python
 client available from https://github.com/ligovirgo/dqsegdb/.
 
-# -- python3x-gwdatafind
+# -- python3x-dqsegdb2
 
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:  Simplified Python %{python3_version} interface to DQSEGDB
 Requires: python%{python3_pkgversion} >= 3.6
+Requires: python%{python3_pkgversion}-click >= 6.7
 Requires: python%{python3_pkgversion}-igwn-auth-utils >= 1.0.0
 Requires: python%{python3_pkgversion}-ligo-segments >= 1.0.0
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
@@ -49,6 +57,29 @@ LIGO-T1300625.
 This package only provides a query interface for `GET` requests, any users
 wishing to make `POST` requests should refer to the official `dqsegdb` Python
 client available from https://github.com/ligovirgo/dqsegdb/.
+
+%files -n python%{python3_pkgversion}-%{srcname}
+%license LICENSE
+%doc README.md
+%{python3_sitelib}/*
+
+# -- dqsegdb2
+
+%package -n %{srcname}
+Summary: Command line utilities for DQSEGDB2
+Requires: python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
+%description -n %{srcname}
+DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
+LIGO-T1300625.
+This package provides the minimal command-line interface.
+
+%files
+%doc README.md
+%license LICENSE
+%{_bindir}/dqsegdb2*
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 8
+%{_mandir}/man*/dqsegdb2*
+%endif
 
 # -- build steps
 
@@ -71,7 +102,11 @@ python_requires = >=3.6
 install_requires =
 	igwn-auth-utils >= 1.0.0
 	ligo-segments >= 1.0.0
+[options.entry_points]
+console_scripts =
+	dqsegdb2 = dqsegdb2.cli:cli
 EOF
+
 cat > setup.py <<EOF
 from setuptools import setup
 setup(use_scm_version=True)
@@ -84,12 +119,24 @@ EOF
 %else
 %py3_build_wheel
 %endif
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 8
+# generate manuals
+%__python3 -c "from setuptools import setup; setup()" \
+  --command-packages=click_man.commands \
+  man_pages \
+  --target man/
+%endif
 
 %install
 %if 0%{?rhel} == 0 || 0%{?rhel} >= 9
 %pyproject_install
 %else
 %py3_install_wheel %{srcname}-%{version}-*.whl
+%endif
+%if 0%{?rhel} == 0 || 0%{?rhel} >= 8
+# install manuals
+%__mkdir -p -v %{buildroot}%{_mandir}/man1
+%__install -m 644 -p -v man/*.1 %{buildroot}%{_mandir}/man1/
 %endif
 
 %check
@@ -98,11 +145,6 @@ PYTHONPATH="%{buildroot}%{python3_sitelib}" \
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%files -n python%{python3_pkgversion}-%{srcname}
-%license LICENSE
-%doc README.md
-%{python3_sitelib}/*
 
 # -- changelog
 
