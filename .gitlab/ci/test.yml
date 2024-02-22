@@ -29,6 +29,10 @@
       EOF
     # run the tests
     - !reference [".python:pytest", script]
+    # and sanity check the CLI
+    - python3 -m coverage run --append --source dqsegdb2 --module dqsegdb2 --help
+    - dqsegdb2 --help
+    - dqsegdb2 query --help
   # upload coverage file as an artifact to be combined later
   artifacts:
     when: always
