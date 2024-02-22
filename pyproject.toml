@@ -39,6 +39,7 @@ classifiers = [
 # requirements
 requires-python = ">=3.6"
 dependencies = [
+  "click >= 6.7",
   "igwn-auth-utils >= 1.0.0",
   "ligo-segments >= 1.0.0",
 ]
@@ -62,6 +63,9 @@ lint = [
   "flake8 >= 3.7.0",
   "flake8-bandit",
 ]
+
+[project.scripts]
+dqsegdb2 = "dqsegdb2.cli:cli"
 
 [project.urls]
 "Bug Tracker" = "https://git.ligo.org/duncanmmacleod/dqsegdb2/-/issues"
