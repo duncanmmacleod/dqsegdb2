@@ -181,6 +181,9 @@ test:el8:
     - .el8
   needs:
     - rpm:el8
+  variables:
+    # skip tests on old pytest
+    PYTEST_OPTIONS: "-ra -v --pyargs dqsegdb2.tests -k 'not test_query_mock'"
 
 test:el9:
   extends:
