@@ -28,7 +28,8 @@ from .requests import Session
 
 try:
     from ._version import version as __version__
-except ModuleNotFoundError:  # development mode
+except ModuleNotFoundError:  # pragma: no cover
+    # development mode
     __version__ = 'dev'
 
 __author__ = 'Duncan Macleod <duncan.macleod@ligo.org>'
