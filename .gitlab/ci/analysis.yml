@@ -4,7 +4,9 @@
 
 include:
   # https://docs.gitlab.com/ee/user/application_security/dependency_scanning/
-  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  # https://docs.gitlab.com/ee/user/application_security/sast/
+  - template: Jobs/SAST.gitlab-ci.yml
   # https://computing.docs.ligo.org/gitlab-ci-templates/
   - project: computing/gitlab-ci-templates
     # https://computing.docs.ligo.org/gitlab-ci-templates/python/
@@ -61,3 +63,9 @@ dependency_scanning:
           reqs.extend(dist.extras_require[extra])
       print('\n'.join(reqs))
       " | sort -u > requirements.txt
+
+# -- SAST -------------------
+
+sast:
+  stage: code quality
+  needs: []
