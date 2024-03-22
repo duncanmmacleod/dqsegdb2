@@ -50,9 +50,11 @@ flake8:
 #
 
 dependency_scanning:
-  stage: code quality
   needs: []
+  stage: code quality
   before_script:
+    # The builtin dependency scanner isn't smart enough to
+    # parse pyproject.toml directly, so we create a requirements.txt.
     - |
       python -c "
       from setuptools import Distribution
@@ -63,6 +65,12 @@ dependency_scanning:
           reqs.extend(dist.extras_require[extra])
       print('\n'.join(reqs))
       " | sort -u > requirements.txt
+
+gemnasium-python-dependency_scanning:
+  rules:
+    # The Python dependency scanner doesn't auto-detect projects that
+    # only use pyproject.toml, so we force the job to run.
+    - if: $CI_COMMIT_BRANCH
 
 # -- SAST -------------------
 
