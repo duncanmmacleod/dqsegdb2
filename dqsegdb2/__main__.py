@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018,2020  Duncan Macleod
+# Copyright (C) 2024  Duncan Macleod
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,22 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""A simplified Python implementation of the DQSEGDB API.
+"""Module-execution entry point for DQSEGDB2.
 """
 
-from .query import (
-    query_ifos,
-    query_names,
-    query_versions,
-    query_segments,
-)
-from .requests import Session
+import sys
 
-try:
-    from ._version import version as __version__
-except ModuleNotFoundError:  # pragma: no cover
-    # development mode
-    __version__ = 'dev'
+from dqsegdb2.cli import cli
 
-__author__ = 'Duncan Macleod <duncan.macleod@ligo.org>'
-__credits__ = 'Ryan Fisher, Gary Hemming'
+if __name__ == "__main__":
+    sys.exit(cli())

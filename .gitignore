@@ -14,3 +14,10 @@ __pycache__/
 .pytest_cache/
 /docs/api/
 /dqsegdb2/_version.py
+/man/
+debian/tmp/
+debian/*debhelper*
+debian/*.substvars
+debian/*dqsegdb2/
+debian/files
+.pybuild/
