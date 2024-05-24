@@ -15,6 +15,7 @@ Packager: Duncan Macleod <duncan.macleod@ligo.org>
 Vendor:   Duncan Macleod <duncan.macleod@ligo.org>
 
 BuildArch: noarch
+Prefix:    %{_prefix}
 
 # -- build requirements -----
 
