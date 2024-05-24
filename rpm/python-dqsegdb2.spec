@@ -65,15 +65,15 @@ client available from https://github.com/ligovirgo/dqsegdb/.
 
 # -- dqsegdb2
 
-%package -n %{srcname}
+%package -n dqsegdb2
 Summary: Command line utilities for DQSEGDB2
 Requires: python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
-%description -n %{srcname}
+%description -n dqsegdb2
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
 LIGO-T1300625.
 This package provides the minimal command-line interface.
 
-%files
+%files -n dqsegdb2
 %doc README.md
 %license LICENSE
 %{_bindir}/dqsegdb2*
