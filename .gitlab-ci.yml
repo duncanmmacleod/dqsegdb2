@@ -1,24 +1,86 @@
-stages:
-  - source distribution
-  - source packages
-  - binary packages
-  - testing
-  - code coverage
-  - documentation
-  - code quality
-
 include:
-  # tarball
-  - local: '/.gitlab/ci/dist.yml'
-  # Debian packaging
-  - local: '/.gitlab/ci/debian.yml'
-  # RHEL packaging
-  - local: '/.gitlab/ci/rhel.yml'
-  # Python tests
-  - local: '/.gitlab/ci/python.yml'
-  # Code coverage
-  - local: '/.gitlab/ci/coverage.yml'
-  # Code quality
-  - local: '/.gitlab/ci/analysis.yml'
-  # Documentation
-  - local: '/.gitlab/ci/docs.yml'
+  # -- Python -------------------------
+
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/python/all@main
+    inputs:
+      install_extra: "test"
+
+  # -- Debian packaging ---------------
+
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/debian/all@main
+    inputs:
+      needs: [sdist]
+      debian_versions:
+        - bullseye-backports
+        - bookworm
+      test_install: &system_test_install >-
+        python3-pytest
+        python3-pytest-cov
+        python3-requests-mock
+
+  # -- Red Hat packaging --------------
+
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/redhat/all@main
+    inputs:
+      needs: [sdist]
+      redhat_versions:
+        - 8
+        - 9
+      test_install: *system_test_install
+
+  # -- Documentation ------------------
+
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/sphinx/build@main
+    inputs:
+      requirements: ".[docs]"
+
+# -- customisations
+#
+# Configure tests of the system-installed package
+#
+
+.system_install_test:
+  variables:
+    COVERAGE_FILE: ".coverage-${CI_JOB_NAME_SLUG}"
+    GIT_STRATEGY: none
+  script:
+    # run pytest with coverage
+    - /usr/bin/python3 -m pytest
+        -ra
+        --cov dqsegdb2
+        --durations 0
+        --junit-xml junit.xml
+        --pyargs dqsegdb2
+        --verbose
+    # test command-line interface
+    - python3 -m coverage run --append --source dqsegdb2 --module dqsegdb2 --help
+    - dqsegdb2 --help
+    - dqsegdb2 query --help
+    # report coverage
+    - python3 -m coverage xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.yml
+      junit: junit.xml
+    paths:
+      - .coverage*
+
+# insert the variables, script, and artifacts into the test template
+# for debian and redhat
+
+debian_test:
+  variables: !reference [.system_install_test, variables]
+  script: !reference [.system_install_test, script]
+  artifacts: !reference [.system_install_test, artifacts]
+
+redhat_test:
+  variables: !reference [.system_install_test, variables]
+  script: !reference [.system_install_test, script]
+  artifacts: !reference [.system_install_test, artifacts]
+
+# skip tests on old pytest
+redhat_test_el8:
+  variables:
+    PYTEST_ADDOPTS: "-ra -v --pyargs dqsegdb2.tests -k 'not test_query_mock'"

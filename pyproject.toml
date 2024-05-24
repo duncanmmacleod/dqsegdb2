@@ -94,16 +94,14 @@ source = [
   "*/lib*/python*/*-packages/dqsegdb2/",
 ]
 
-[tool.coverage.run]
-# don't report coverage for _version.py
-# (generated automatically by setuptools-scm)
-omit = [
-    "*/_version.py",
-]
-
 [tool.coverage.report]
 # print report with one decimal point
 precision = 1
+# don't report coverage for _version.py
+# (generated automatically by setuptools-scm)
+omit = [
+    "*/dqsegdb2/_version.py",
+]
 
 # -- pytest
 
