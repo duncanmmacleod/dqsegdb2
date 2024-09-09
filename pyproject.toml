@@ -1,8 +1,10 @@
+# -- project
+
 [build-system]
 requires = [
-	"setuptools>=42",
-	"setuptools_scm[toml]>=3.4.3",
-	"wheel",
+  "setuptools>=42",
+  "setuptools_scm[toml]>=3.4.3",
+  "wheel",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -72,18 +74,7 @@ dqsegdb2 = "dqsegdb2.cli:cli"
 "Documentation" = "https://dqsegdb2.readthedocs.io"
 "Source Code" = "https://git.ligo.org/computing/software/dqsegdb2.git"
 
-[tool.setuptools]
-license-files = [ "LICENSE" ]
-
-[tool.setuptools.packages.find]
-include = [
-  "dqsegdb2*",
-]
-
-[tool.setuptools_scm]
-write_to = "dqsegdb2/_version.py"
-
-# -- coverage.py
+# -- tools
 
 [tool.coverage.paths]
 # map standard install paths back to the source to
@@ -100,14 +91,23 @@ precision = 1
 # don't report coverage for _version.py
 # (generated automatically by setuptools-scm)
 omit = [
-    "*/dqsegdb2/_version.py",
+  "*/dqsegdb2/_version.py",
 ]
-
-# -- pytest
 
 [tool.pytest.ini_options]
 addopts = "-r a"
 filterwarnings = [
-	"error",
-	"ignore:.*pkg_resources.*",
+  "error",
+  "ignore:.*pkg_resources.*",
 ]
+
+[tool.setuptools]
+license-files = [ "LICENSE" ]
+
+[tool.setuptools.packages.find]
+include = [
+  "dqsegdb2*",
+]
+
+[tool.setuptools_scm]
+write_to = "dqsegdb2/_version.py"
