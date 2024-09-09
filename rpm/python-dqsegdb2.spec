@@ -151,9 +151,6 @@ SETUP_PY
 PYTHONPATH="%{buildroot}%{python3_sitelib}" \
 %{__python3} -m pip show %{srcname} -f
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 # -- changelog
 
 %changelog

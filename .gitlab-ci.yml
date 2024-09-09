@@ -26,6 +26,7 @@ include:
       redhat_versions:
         - 8
         - 9
+      rpmlint_options: "--config .rpmlint.toml"
       test_install: *system_test_install
 
   # -- Documentation ------------------
