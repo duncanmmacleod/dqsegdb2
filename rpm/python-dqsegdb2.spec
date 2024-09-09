@@ -1,4 +1,5 @@
 %define srcname dqsegdb2
+%global distname %{lua:name = string.gsub(rpm.expand("%{srcname}"), "[.-]", "_"); print(name)}
 %define version 1.2.1
 %define release 1
 
@@ -9,7 +10,7 @@ Summary:  Simplified python interface to DQSEGDB
 
 License:  GPLv3
 Url:      https://pypi.org/project/%{srcname}/
-Source0:  %pypi_source
+Source0:  %pypi_source %distname
 
 Packager: Duncan Macleod <duncan.macleod@ligo.org>
 Vendor:   Duncan Macleod <duncan.macleod@ligo.org>
@@ -85,10 +86,12 @@ This package provides the minimal command-line interface.
 # -- build steps
 
 %prep
-%autosetup -n %{srcname}-%{version}
-# for RHEL < 9 hack together setup.{cfg,py} for old setuptools
-%if 0%{?rhel} > 0 || 0%{?rhel} < 9
-cat > setup.cfg <<EOF
+%autosetup -n %{distname}-%{version}
+
+%if 0%{?rhel} && 0%{?rhel} < 10
+echo "Writing setup.cfg for setuptools %{setuptools_version}"
+# hack together setup.cfg for old setuptools to parse
+cat > setup.cfg << SETUP_CFG
 [metadata]
 name = %{srcname}
 version = %{version}
@@ -106,12 +109,16 @@ install_requires =
 [options.entry_points]
 console_scripts =
 	dqsegdb2 = dqsegdb2.cli:cli
-EOF
+SETUP_CFG
+%endif
 
-cat > setup.py <<EOF
+%if %{undefined pyproject_wheel}
+echo "Writing setup.py for py3_build_wheel"
+# write a setup.py to be called explicitly
+cat > setup.py << SETUP_PY
 from setuptools import setup
 setup(use_scm_version=True)
-EOF
+SETUP_PY
 %endif
 
 %build
