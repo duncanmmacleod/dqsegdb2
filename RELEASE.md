@@ -33,7 +33,7 @@ with an actual release version.
 
 -   Draft release notes by looking through the merge requests associated
     with the relevant
-    [milestone on GitLab](https://git.ligo.org/duncanmmacleod/dqsegdb2/-/milestones).
+    [milestone on GitLab](https://git.ligo.org/computing/software/dqsegdb2/-/milestones).
 
 -   Create an annotated, signed tag in `git` using the release notes
     as the tag message:
@@ -51,7 +51,7 @@ with an actual release version.
 ## 3. Create a Release on GitLab
 
 -   Create a
-    [Release on GitLab](https://git.ligo.org/duncanmmacleod/dqsegdb2/-/releases/new), copying the same release notes from the tag message.
+    [Release on GitLab](https://git.ligo.org/computing/software/dqsegdb2/-/releases/new), copying the same release notes from the tag message.
 
     Make sure and correctly associated the correct Tag and Milestone to
     the Release.

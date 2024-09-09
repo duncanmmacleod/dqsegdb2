@@ -68,9 +68,9 @@ lint = [
 dqsegdb2 = "dqsegdb2.cli:cli"
 
 [project.urls]
-"Bug Tracker" = "https://git.ligo.org/duncanmmacleod/dqsegdb2/-/issues"
+"Bug Tracker" = "https://git.ligo.org/computing/software/dqsegdb2/-/issues"
 "Documentation" = "https://dqsegdb2.readthedocs.io"
-"Source Code" = "https://git.ligo.org/duncanmmacleod/dqsegdb2.git"
+"Source Code" = "https://git.ligo.org/computing/software/dqsegdb2.git"
 
 [tool.setuptools]
 license-files = [ "LICENSE" ]

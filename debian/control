@@ -3,8 +3,8 @@
 Source: dqsegdb2
 Maintainer: Duncan Macleod <duncan.macleod@ligo.org>
 Homepage: https://pypi.org/project/dqsegdb2/
-Vcs-Browser: https://git.ligo.org/duncanmmacleod/dqsegdb2
-Vcs-Git: https://git.ligo.org/duncanmmacleod/dqsegdb2.git
+Vcs-Browser: https://git.ligo.org/computing/software/dqsegdb2
+Vcs-Git: https://git.ligo.org/computing/software/dqsegdb2.git
 Section: python
 Priority: optional
 Standards-Version: 4.2.1

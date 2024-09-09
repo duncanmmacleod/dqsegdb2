@@ -6,8 +6,8 @@
 [![DOI](https://zenodo.org/badge/136390328.svg)](https://zenodo.org/badge/latestdoi/136390328)
 ![Supported Python versions](https://img.shields.io/pypi/pyversions/dqsegdb2.svg)
 
-[![Build status](https://git.ligo.org/duncanmmacleod/dqsegdb2/badges/main/pipeline.svg)](https://git.ligo.org/duncanmmacleod/dqsegdb2/-/pipelines)
-![Code coverage](https://git.ligo.org/duncanmmacleod/dqsegdb2/badges/main/coverage.svg)
+[![Build status](https://git.ligo.org/computing/software/dqsegdb2/badges/main/pipeline.svg)](https://git.ligo.org/computing/software/dqsegdb2/-/pipelines)
+![Code coverage](https://git.ligo.org/computing/software/dqsegdb2/badges/main/coverage.svg)
 [![Documentation status](https://readthedocs.org/projects/dqsegdb2/badge/?version=latest)](https://dqsegdb2.readthedocs.io/en/latest/?badge=latest)
 
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
