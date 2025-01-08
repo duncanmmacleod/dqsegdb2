@@ -20,9 +20,11 @@
 
 from functools import partial
 
-from ligo import segments
-
 from igwn_auth_utils.scitokens import target_audience as scitoken_audience
+from igwn_segments import (
+    segment as Segment,
+    segmentlist as SegmentList,
+)
 
 from . import api
 from .requests import (
@@ -237,8 +239,8 @@ def query_segments(
         - ``'ifo'`` - the interferometer prefix (`str`)
         - ``'name'`` - the flag name (`str`)
         - ``'version'`` - the flag version (`int`)
-        - ``'known'`` - the known segments (`~ligo.segments.segmentlist`)
-        - ``'active'`` - the active segments (`~ligo.segments.segmentlist`)
+        - ``'known'`` - the known segments (`~igwn_segments.segmentlist`)
+        - ``'active'`` - the active segments (`~igwn_segments.segmentlist`)
         - ``'metadata'`` - a `dict` of flag information (`dict`)
         - ``'query_information'`` - a `dict` of query information (`dict`)
 
@@ -261,8 +263,8 @@ def query_segments(
     >>> from dqsegdb2.query import query_segments
     >>> query_segments('G1:GEO-SCIENCE:1', 1000000000, 1000001000)
     """
-    request = segments.segmentlist([
-        segments.segment(float(start), float(end)),
+    request = SegmentList([
+        Segment(float(start), float(end)),
     ])
 
     try:
@@ -316,8 +318,8 @@ def query_segments(
             # custom subset of information, with at least the following
             # keys (and types)
             out = dict(
-                known=segments.segmentlist(),
-                active=segments.segmentlist(),
+                known=SegmentList(),
+                active=SegmentList(),
                 ifo=ifo,
                 name=name,
                 version=versions[0],
@@ -337,8 +339,8 @@ def query_segments(
             # if not raw, convert to segment objects
             # and coalesce if asked
             for key in ('active', 'known'):
-                out[key].extend(segments.segmentlist(map(
-                    segments.segment,
+                out[key].extend(SegmentList(map(
+                    Segment,
                     result.pop(key),
                 )))
                 if coalesce:
