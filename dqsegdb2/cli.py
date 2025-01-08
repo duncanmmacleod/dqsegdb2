@@ -1,4 +1,3 @@
-# -*- python -*-
 # Copyright (C) 2024 Cardiff University
 # SPDX-License-Identifier: GPL-3.0-or-later
 

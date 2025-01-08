@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # dqsegdb2 documentation build configuration file
 
 import glob

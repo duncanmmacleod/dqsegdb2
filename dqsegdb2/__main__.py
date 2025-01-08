@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # DQSEGDB2
 # Copyright (C) 2024  Duncan Macleod
 #
