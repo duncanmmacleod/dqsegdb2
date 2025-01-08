@@ -1,5 +1,5 @@
 # DQSEGDB2
-# Copyright (C) 2018  Duncan Macleod
+# Copyright (C) 2018-2025 Cardiff University
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 # DQSEGDB2
-# Copyright (C) 2018,2020,2022  Duncan Macleod
+# Copyright (C) 2018-2025 Cardiff University
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +21,8 @@ from functools import partial
 
 from igwn_auth_utils.scitokens import target_audience as scitoken_audience
 from igwn_segments import (
-    segment as Segment,
-    segmentlist as SegmentList,
+    segment as Segment,  # noqa: N812
+    segmentlist as SegmentList,  # noqa: N812
 )
 
 from . import api

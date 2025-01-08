@@ -1,5 +1,4 @@
-# -*- python -*-
-# Copyright (C) 2024 Cardiff University
+# Copyright (C) 2024-2025 Cardiff University
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """Tests for `dqsegdb2.cli`.
@@ -10,7 +9,6 @@ __author__ = "Duncan Macleod <duncan.macleod@ligo.org>"
 import json
 
 import pytest
-
 from click.testing import CliRunner
 
 from dqsegdb2 import cli
