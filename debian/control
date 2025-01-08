@@ -10,7 +10,7 @@ Priority: optional
 Standards-Version: 4.2.1
 X-Python3-Version: >= 3.6
 Build-Depends:
- debhelper (>= 10),
+ debhelper-compat (= 11),
  dh-python,
  pybuild-plugin-pyproject,
  python3-all (>= 3.6),
