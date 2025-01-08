@@ -1,26 +1,42 @@
 include:
-  # -- Python -------------------------
+  # -- Python ------------------------
 
-  - component: $CI_SERVER_FQDN/computing/gitlab/components/python/all@main
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/python/all@1
     inputs:
       install_extra: "test"
+      extra_test_commands: &test_commands
+        # test module execution and command-line interface
+        - python3 -m coverage run --append --source dqsegdb2 --module dqsegdb2 --help
+        - dqsegdb2 --help
+        - dqsegdb2 query --help
 
-  # -- Debian packaging ---------------
+  # -- Debian packaging --------------
 
-  - component: $CI_SERVER_FQDN/computing/gitlab/components/debian/all@main
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/debian/all@2
     inputs:
       needs: [sdist]
       debian_versions:
-        - bullseye-backports
+        - bullseye
         - bookworm
       test_install: &system_test_install >-
+        dqsegdb2
         python3-pytest
         python3-pytest-cov
         python3-requests-mock
+      test_script: &system_test_script
+        - python3 -m pytest
+            -ra
+            --cov dqsegdb2
+            --durations 0
+            --junit-xml junit.xml
+            --pyargs dqsegdb2
+            --verbose
+        - *test_commands
+        - python3 -m coverage xml
 
-  # -- Red Hat packaging --------------
+  # -- Red Hat packaging -------------
 
-  - component: $CI_SERVER_FQDN/computing/gitlab/components/redhat/all@main
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/redhat/all@2
     inputs:
       needs: [sdist]
       redhat_versions:
@@ -28,58 +44,15 @@ include:
         - 9
       rpmlint_options: "--config .rpmlint.toml"
       test_install: *system_test_install
+      test_script: *system_test_script
 
-  # -- Documentation ------------------
+  # -- Documentation -----------------
 
-  - component: $CI_SERVER_FQDN/computing/gitlab/components/sphinx/build@main
+  - component: $CI_SERVER_FQDN/computing/gitlab/components/sphinx/build@~latest
     inputs:
       requirements: ".[docs]"
 
-# -- customisations
-#
-# Configure tests of the system-installed package
-#
-
-.system_install_test:
-  variables:
-    COVERAGE_FILE: ".coverage-${CI_JOB_NAME_SLUG}"
-    GIT_STRATEGY: none
-  script:
-    # run pytest with coverage
-    - /usr/bin/python3 -m pytest
-        -ra
-        --cov dqsegdb2
-        --durations 0
-        --junit-xml junit.xml
-        --pyargs dqsegdb2
-        --verbose
-    # test command-line interface
-    - python3 -m coverage run --append --source dqsegdb2 --module dqsegdb2 --help
-    - dqsegdb2 --help
-    - dqsegdb2 query --help
-    # report coverage
-    - python3 -m coverage xml
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage.yml
-      junit: junit.xml
-    paths:
-      - .coverage*
-
-# insert the variables, script, and artifacts into the test template
-# for debian and redhat
-
-debian_test:
-  variables: !reference [.system_install_test, variables]
-  script: !reference [.system_install_test, script]
-  artifacts: !reference [.system_install_test, artifacts]
-
-redhat_test:
-  variables: !reference [.system_install_test, variables]
-  script: !reference [.system_install_test, script]
-  artifacts: !reference [.system_install_test, artifacts]
+# -- customisations ------------------
 
 # skip tests on old pytest
 redhat_test_el8:
