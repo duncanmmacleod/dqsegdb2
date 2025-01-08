@@ -61,10 +61,6 @@ docs = [
   "sphinx",
   "sphinx-automodapi",
 ]
-lint = [
-  "flake8 >= 3.7.0",
-  "flake8-bandit",
-]
 
 [project.scripts]
 dqsegdb2 = "dqsegdb2.cli:cli"
@@ -99,6 +95,35 @@ addopts = "-r a"
 filterwarnings = [
   "error",
   "ignore:.*pkg_resources.*",
+]
+
+[tool.ruff.lint]
+select = [
+  # mccabe
+  "C90",
+  # pycodestyle errors
+  "E",
+  # flake8-executable
+  "EXE",
+  # pyflakes
+  "F",
+  # isort
+  "I",
+  # pep8-naming
+  "N",
+  # pyupgrade
+  "UP",
+  # pycodestyle warnings
+  "W",
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-wrap-aliases = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+  "F401",  # unused-import
 ]
 
 [tool.setuptools]
