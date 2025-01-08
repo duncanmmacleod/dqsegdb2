@@ -3,5 +3,5 @@ Filters = [
   # on the same build of python3-dqsegdb
   ".* requires-on-release python3-dqsegdb2",
   # we use tabs for the hacky setup.cfg file
-  "\.spec.* mixed-use-of-spaces-and-tabs",
+  "\\\\.spec.* mixed-use-of-spaces-and-tabs",
 ]

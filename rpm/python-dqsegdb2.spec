@@ -34,7 +34,7 @@ BuildRequires: python%{python3_pkgversion}-wheel
 BuildRequires: python%{python3_pkgversion}-click
 BuildRequires: python%{python3_pkgversion}-click-man
 BuildRequires: python%{python3_pkgversion}-igwn-auth-utils
-BuildRequires: python%{python3_pkgversion}-ligo-segments
+BuildRequires: python%{python3_pkgversion}-igwn-segments
 %endif
 
 %description
@@ -51,7 +51,7 @@ Summary:  Simplified Python %{python3_version} interface to DQSEGDB
 Requires: python%{python3_pkgversion} >= 3.6
 Requires: python%{python3_pkgversion}-click >= 6.7
 Requires: python%{python3_pkgversion}-igwn-auth-utils >= 1.0.0
-Requires: python%{python3_pkgversion}-ligo-segments >= 1.0.0
+Requires: python%{python3_pkgversion}-igwn-segments >= 2.0.0
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
 %description -n python%{python3_pkgversion}-%{srcname}
 DQSEGDB2 is a simplified Python implementation of the DQSEGDB API as defined in
@@ -105,7 +105,7 @@ packages = find:
 python_requires = >=3.6
 install_requires =
 	igwn-auth-utils >= 1.0.0
-	ligo-segments >= 1.0.0
+	igwn-segments >= 2.0.0
 [options.entry_points]
 console_scripts =
 	dqsegdb2 = dqsegdb2.cli:cli

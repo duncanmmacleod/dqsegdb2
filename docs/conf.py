@@ -35,8 +35,8 @@ intersphinx_mapping = {
         "https://igwn-auth-utils.readthedocs.io/en/stable/",
         None,
     ),
-    "ligo-segments": (
-        "https://lscsoft.docs.ligo.org/ligo-segments/",
+    "igwn-segments": (
+        "https://igwn-segments.readthedocs.io/en/stable/",
         None,
     ),
     "python": (
