@@ -1,6 +1,6 @@
 %define srcname dqsegdb2
 %global distname %{lua:name = string.gsub(rpm.expand("%{srcname}"), "[.-]", "_"); print(name)}
-%define version 1.2.1
+%define version 1.3.0
 %define release 1
 
 Name:     python-%{srcname}
@@ -154,6 +154,14 @@ PYTHONPATH="%{buildroot}%{python3_sitelib}" \
 # -- changelog
 
 %changelog
+* Wed Jan 08 2025 Duncan Macleod <duncan.macleod@ligo.org> - 1.3.0-1
+- update for 1.3.0
+- add Prefix metadata
+- specify distname for pypi_source (sdist naming convention changed)
+- hack build to create setup.cfg on-the-fly for old setuptools (EL<10)
+- add command-line package 'dqsegdb2' with python3-click dependency
+- migrate dependency from ligo-segments to igwn-segments
+
 * Fri Aug 25 2023 Duncan Macleod <duncan.macleod@ligo.org> - 1.2.1-1
 - update for 1.2.1
 - update igwn-auth-utils minimum requirement
