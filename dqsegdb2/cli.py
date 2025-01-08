@@ -1,4 +1,4 @@
-# Copyright (C) 2024 Cardiff University
+# Copyright (C) 2024-2025 Cardiff University
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """Command-line interface for DQSEGDB2.
