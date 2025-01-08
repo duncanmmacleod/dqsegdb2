@@ -1,7 +1,5 @@
 # dqsegdb2 documentation build configuration file
 
-import glob
-import os.path
 import re
 import sys
 from importlib import metadata
