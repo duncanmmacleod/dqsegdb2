@@ -62,8 +62,6 @@ RedHat / CentOS / Scientific / Rocky Linux
     dnf install python3-dqsegdb2
 
 See the IGWN Computing Guide software repositories entries for
-`Scientific Linux 7
-<https://computing.docs.ligo.org/guide/software/sl7/>`__
-or
 `Rocky Linux 8 <https://computing.docs.ligo.org/guide/software/rl8/>`__
-for instructions on how to configure the required IGWN Yum repositories.
+or `Rocky Linux 9 <https://computing.docs.ligo.org/guide/software/rl9/>`__
+for instructions on how to configure the required IGWN RPM repositories.
