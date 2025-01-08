@@ -20,8 +20,8 @@
 from .query import (
     query_ifos,
     query_names,
-    query_versions,
     query_segments,
+    query_versions,
 )
 from .requests import Session
 

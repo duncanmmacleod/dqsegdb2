@@ -9,7 +9,6 @@ __author__ = "Duncan Macleod <duncan.macleod@ligo.org>"
 import json
 
 import pytest
-
 from click.testing import CliRunner
 
 from dqsegdb2 import cli
