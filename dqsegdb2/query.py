@@ -21,8 +21,8 @@ from functools import partial
 
 from igwn_auth_utils.scitokens import target_audience as scitoken_audience
 from igwn_segments import (
-    segment as Segment,
-    segmentlist as SegmentList,
+    segment as Segment,  # noqa: N812
+    segmentlist as SegmentList,  # noqa: N812
 )
 
 from . import api
